@@ -9,73 +9,10 @@ import TimerCircle from "./components/TimerCircle";
 import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
+import LumberjackGame from "./components/LumberjackGame.jsx";
 
 const ROUND_TIME = 15;
 const API_BASE = "/api";
-
-// کامپوننت جدید برای بازی Lumberjack
-const LumberjackGame = ({ 
-  lumberjackPosition, 
-  nextBranch, 
-  onMove, 
-  disabled 
-}) => {
-  return (
-    <div className="relative w-full max-w-md h-[70vh] flex flex-col items-center">
-      {/* نمایش درخت */}
-      <div className="relative w-16 h-full bg-amber-900">
-        {/* تنه درخت */}
-        <div className="absolute inset-0 bg-amber-800 w-full"></div>
-        
-        {/* شاخه‌ها */}
-        {nextBranch.side !== 'none' && (
-          <div 
-            className={`absolute w-32 h-4 bg-green-800 rounded-lg ${
-              nextBranch.side === 'left' 
-                ? 'left-[-120px] rotate-[-30deg]' 
-                : 'right-[-120px] rotate-[30deg]'
-            }`}
-            style={{ top: '30%' }}
-          ></div>
-        )}
-      </div>
-      
-      {/* چوب‌بر */}
-      <div 
-        className={`absolute bottom-10 transition-all duration-200 ${
-          lumberjackPosition === 'left' ? 'left-1/4' : 'right-1/4'
-        }`}
-      >
-        <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
-          <span className="text-white font-bold">🪓</span>
-        </div>
-      </div>
-      
-      {/* دکمه‌های کنترل */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between p-4">
-        <button
-          onClick={() => onMove('left')}
-          disabled={disabled}
-          className="px-8 py-4 bg-red-500 text-white rounded-lg text-xl font-bold disabled:opacity-50"
-        >
-          ◀ چپ
-        </button>
-        <button
-          onClick={() => onMove('right')}
-          disabled={disabled}
-          className="px-8 py-4 bg-green-500 text-white rounded-lg text-xl font-bold disabled:opacity-50"
-        >
-          راست ▶
-        </button>
-      </div>
-      
-      {/* نمایش سطح فعلی */}
-      <div className="absolute top-4 left-4 bg-amber-700 px-3 py-1 rounded-lg">
-        <span className="text-white font-bold">سطح: {nextBranch.level}</span>
-      </div>
-    </div>
-  );
-};
 
 function App() {
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
@@ -96,13 +33,12 @@ function App() {
     });
     const [gameActive, setGameActive] = useState(false);
     const [currentGameEventId, setCurrentGameEventId] = useState(null);
-    
-    // حالت‌های جدید برای بازی Lumberjack
     const [lumberjackPosition, setLumberjackPosition] = useState('left');
     const [nextBranch, setNextBranch] = useState({ 
-      side: 'none', 
-      level: 1 
+        side: 'none', 
+        level: 1 
     });
+    const [showGameLobby, setShowGameLobby] = useState(false);
 
     const timerId = useRef(null);
     const abortControllerRef = useRef(null);
@@ -168,7 +104,6 @@ function App() {
         [clearResources, handleTimeout]
     );
 
-    // تابع جدید برای حرکت چوب‌بر
     const moveLumberjack = useCallback(
         async (direction) => {
             if (loading || !token || !gameActive) return;
@@ -198,7 +133,6 @@ function App() {
                 const data = await response.json();
 
                 if (data.status === "continue") {
-                    // به‌روزرسانی وضعیت بازی
                     setLumberjackPosition(data.lumberjackPosition);
                     setNextBranch(data.nextBranch);
                     setScore(data.score);
@@ -231,17 +165,12 @@ function App() {
     const startGame = useCallback(
         async (eventId) => {
             setCurrentGameEventId(eventId);
-
-            if (!isAuthenticated || !token) {
-                setError("Please authenticate first");
-                setView("auth");
-                return;
-            }
+            setView("game"); // مستقیماً به صفحه بازی بروید
+            setGameActive(true);
 
             try {
                 setLoading(true);
                 setError(null);
-                setGameActive(true);
 
                 const abortController = new AbortController();
                 abortControllerRef.current = abortController;
@@ -270,12 +199,10 @@ function App() {
                     throw new Error(data?.message || "Invalid server response");
                 }
 
-                // تنظیم وضعیت اولیه بازی Lumberjack
                 setLumberjackPosition(data.lumberjackPosition);
                 setNextBranch(data.nextBranch);
                 startLocalTimer(data.time_left ?? ROUND_TIME);
                 setScore(data.score ?? 0);
-                setView("game");
             } catch (err) {
                 if (err.name === "AbortError") {
                     console.log("Request was aborted");
@@ -289,14 +216,14 @@ function App() {
                         : err.message
                 );
                 setGameActive(false);
-                setView("lobby");
+                setShowGameLobby(true); // بازگشت به لابی در صورت خطا
             } finally {
                 if (!abortControllerRef.current?.signal.aborted) {
                     setLoading(false);
                 }
             }
         },
-        [startLocalTimer, isAuthenticated, token]
+        [startLocalTimer, token]
     );
 
     const handleImageError = useCallback((e) => {
@@ -304,37 +231,6 @@ function App() {
             e.target.src = DefaultAvatar;
         }
         e.target.onerror = null;
-    }, []);
-
-    useEffect(() => {
-        const initAuth = async () => {
-            if (token && userData) {
-                setIsAuthenticated(true);
-                setView("lobby");
-                setAuthLoading(false);
-            } else {
-                await authenticateUser();
-            }
-        };
-
-        initAuth();
-        return () => clearResources();
-    }, [authenticateUser, clearResources, token, userData]);
-
-    useEffect(() => {
-        if (error) {
-            const timer = setTimeout(() => setError(null), 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [error]);
-
-    const handleLogout = useCallback(() => {
-        localStorage.removeItem("jwtToken");
-        localStorage.removeItem("userData");
-        setToken(null);
-        setUserData(null);
-        setIsAuthenticated(false);
-        setView("auth");
     }, []);
 
     const authenticateUser = useCallback(async () => {
@@ -347,7 +243,7 @@ function App() {
                     "Running in non-Telegram environment, skipping authentication"
                 );
                 setIsAuthenticated(true);
-                setView("home");
+                setShowGameLobby(true);
                 return;
             }
 
@@ -378,7 +274,7 @@ function App() {
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("userData", JSON.stringify(data.user));
             setIsAuthenticated(true);
-            setView("lobby");
+            setShowGameLobby(true); // نمایش لابی پس از احراز هویت
         } catch (error) {
             console.error("Authentication error:", error);
             setError(error.message);
@@ -387,6 +283,38 @@ function App() {
         } finally {
             setAuthLoading(false);
         }
+    }, []);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            if (token && userData) {
+                setIsAuthenticated(true);
+                setShowGameLobby(true);
+                setAuthLoading(false);
+            } else {
+                await authenticateUser();
+            }
+        };
+
+        initAuth();
+        return () => clearResources();
+    }, [authenticateUser, clearResources, token, userData]);
+
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => setError(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
+    const handleLogout = useCallback(() => {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userData");
+        setToken(null);
+        setUserData(null);
+        setIsAuthenticated(false);
+        setView("auth");
+        setShowGameLobby(false);
     }, []);
 
     const authContent = useMemo(() => {
@@ -419,7 +347,7 @@ function App() {
     }, [view, authLoading, error, authenticateUser]);
 
     const lobbyContent = useMemo(() => {
-        if (view !== "lobby") return null;
+        if (!showGameLobby) return null;
 
         return (
             <GameLobby
@@ -429,9 +357,8 @@ function App() {
                 onImageError={handleImageError}
             />
         );
-    }, [view, startGame, userData, handleLogout, handleImageError]);
+    }, [showGameLobby, startGame, userData, handleLogout, handleImageError]);
 
-    // محتوای بازی Lumberjack
     const gameContent = useMemo(() => {
         if (view !== "game") return null;
 
@@ -458,7 +385,6 @@ function App() {
                     )}
                 </div>
 
-                {/* کامپوننت بازی Lumberjack */}
                 <LumberjackGame 
                     lumberjackPosition={lumberjackPosition}
                     nextBranch={nextBranch}
@@ -490,7 +416,7 @@ function App() {
                     API_BASE={API_BASE}
                     finalScore={finalScore}
                     onReplay={() => startGame(currentGameEventId)}
-                    onHome={() => setView("lobby")}
+                    onHome={() => setShowGameLobby(true)}
                     userData={userData}
                     eventId={currentGameEventId}
                 />

@@ -58,7 +58,7 @@ The tournament has now officially ended. Keep practicing for the next event!`;
     const options = {
         parse_mode: 'Markdown',
         reply_markup: {
-            inline_keyboard: [[{ text: '🚀 Play in Free mode and practice!', web_app: { url: 'https://math-battle.momis.studio' } }]]
+            inline_keyboard: [[{ text: '🚀 Play in Free mode and practice!', web_app: { url: 'https://lumberjack.momis.studio' } }]]
         }
     };
     try {
@@ -77,7 +77,7 @@ function startListening() {
         const options = {
             parse_mode: 'Markdown',
             reply_markup: {
-                inline_keyboard: [[{ text: '🚀 Play Game!', web_app: { url: 'https://math-battle.momis.studio' } }]]
+                inline_keyboard: [[{ text: '🚀 Play Game!', web_app: { url: 'https://lumberjack.momis.studio' } }]]
             }
         };
         bot.sendMessage(msg.chat.id, welcomeText, options);

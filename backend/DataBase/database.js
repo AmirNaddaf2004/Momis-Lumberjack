@@ -1,33 +1,25 @@
-
+// Import Sequelize library
 const { Sequelize } = require('sequelize');
-console.log("🟡 [database.js] File execution started.");
 
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
-// --- لاگ تشخیصی شماره ۲: بررسی متغیر DB_URL ---
-console.log("🟡 [database.js] Attempting to read DB_URL from process.env...");
-console.log(`🟡 [database.js] DB_URL value is: ${process.env.DATABASE_URL}`);
-// ---
-if (!process.env.DATABASE_URL) {
-  console.error("🔴 [database.js] FATAL ERROR: DB_URL is not defined in the .env file.");
-  throw new Error('DB_URL is not defined in the .env file');
-}
-
-// ساخت یک نمونه از Sequelize با استفاده از DB_URL
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'mysql',
-  logging: false, // لاگ کردن کوئری‌ها را غیرفعال می‌کند
-});
-
-// تست اتصال به دیتابیس
+// Database connection configuration
+const sequelize = new Sequelize(
+    'lumberjack_db',
+    'lumberjack_user', // نام کاربری اپلیکیشن
+    '13831383', // رمز عبور اپلیکیشن
+    {
+        host: 'localhost',
+        dialect: 'mysql',
+        logging: false,
+    }
+);
+// Test the database connection
 sequelize.authenticate()
-  .then(() => {
-    console.log('✅ [database.js] Connection to the database has been established successfully.');
-  })
-  .catch((error) => {
-    console.error('❌ [database.js] Unable to connect to the database:', error.message);
-  });
+    .then(() => {
+        console.log('Connection to the database has been established successfully.');
+    })
+    .catch((error) => {
+        console.error('Unable to connect to the database:', error);
+    });
 
-// صدور نمونه ساخته شده برای استفاده در فایل‌های دیگر
+// Export the sequelize instance for use in other parts of the application
 module.exports = sequelize;

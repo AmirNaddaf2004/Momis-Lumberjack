@@ -11,13 +11,14 @@ const LumberjackGame = () => {
   
   const gameAreaRef = useRef(null);
   const chopSoundRef = useRef(null);
+  const gameLoopRef = useRef(null);
   
   // Initialize game
   useEffect(() => {
     if (!gameActive) return;
     
     // Game loop
-    const gameLoop = setInterval(() => {
+    gameLoopRef.current = setInterval(() => {
       // Generate new trees randomly
       if (Math.random() > 0.97) {
         const newTree = {
@@ -44,7 +45,11 @@ const LumberjackGame = () => {
       });
     }, 200);
     
-    return () => clearInterval(gameLoop);
+    return () => {
+      if (gameLoopRef.current) {
+        clearInterval(gameLoopRef.current);
+      }
+    };
   }, [logs, playerPosition, gameActive]);
   
   // Handle keyboard controls

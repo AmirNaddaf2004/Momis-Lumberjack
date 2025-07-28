@@ -12,7 +12,6 @@ import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
 
-// amir
 const ROUND_TIME = 15;
 const API_BASE = "/api";
 

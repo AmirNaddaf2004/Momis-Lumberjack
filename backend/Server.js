@@ -23,7 +23,7 @@ const allowedOrigins = [
     "https://momis.studio",
     "https://www.momis.studio",
     "https://web.telegram.org",
-    "https://math-battle.momis.studio",
+    "https://lumberjack.momis.studio/",
 ];
 
 app.use((req, res, next) => {
@@ -681,7 +681,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 10101;
 app.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
     logger.info(`Allowed CORS origins: ${allowedOrigins.join(", ")}`);

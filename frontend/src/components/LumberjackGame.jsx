@@ -122,25 +122,21 @@ const LumberjackGame = () => {
 
   return (
     <div className="lumberjack-game"
-      style={{
-      backgroundImage: './../assets/GameWallpaper.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      padding: '20px',
-      borderRadius: '10px',
-      boxShadow: '0 0 20px rgba(0,0,0,0.5)'
-    }}
-    >
-      <div className="game-info">
-        <h2>Lumberjack Challenge</h2>
-        <p>Score: <strong>{score}</strong></p>
-        <p>← → Move | SPACE Chop</p>
-      </div>
-      
+    //   style={{
+    //   backgroundImage: './../assets/GameWallpaper.jpg)',
+    //   backgroundSize: 'cover',
+    //   backgroundPosition: 'center',
+    //   padding: '20px',
+    //   borderRadius: '10px',
+    //   boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+    // }}
+    > 
       <div 
         ref={gameAreaRef} 
         className="game-area"
-        style={{ position: 'relative', height: '400px', border: '2px solid #4CAF50' }}
+        style={{ position: 'relative', height: '400px', border: '2px solid #4CAF50' , 
+              backgroundColor: '#4CAF50'
+        }}
       >
         {/* Player */}
         <div 
@@ -217,39 +213,6 @@ const LumberjackGame = () => {
           />
         ))}
         
-        {/* Game Over Overlay */}
-        {!gameActive && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.7)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white'
-          }}>
-            <h2>Game Over!</h2>
-            <p>Final Score: {score}</p>
-            <button 
-              onClick={resetGame}
-              style={{
-                padding: '10px 20px',
-                background: '#4CAF50',
-                border: 'none',
-                borderRadius: '5px',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Play Again
-            </button>
-          </div>
-        )}
       </div>
       
       {/* Hidden audio for chop sound */}

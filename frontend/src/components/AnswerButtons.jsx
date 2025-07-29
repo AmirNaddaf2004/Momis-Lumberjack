@@ -4,26 +4,27 @@
  */
 export default function AnswerButtons({ onAnswer, disabled }) {
     const base =
-      "w-32 h-14 rounded-2xl text-xl font-semibold shadow-lg transition-transform active:scale-95";
-  
+      "flex items-center justify-center w-14 h-14 rounded-full text-2xl font-semibold shadow-lg transition-transform active:scale-95";
+
     return (
       <div className="flex gap-8 mt-8 justify-center">
         <button
-          className={`${base} bg-green-500 hover:bg-green-600 text-white`}
+          className={`${base} bg-white hover:bg-gray-100 text-black`}
           onClick={() => onAnswer(true)}
           disabled={disabled}
+          aria-label="False"
         >
-          True
+          ←
         </button>
-  
+
         <button
-          className={`${base} bg-red-500 hover:bg-red-600 text-white`}
+          className={`${base} bg-white hover:bg-gray-100 text-black`}
           onClick={() => onAnswer(false)}
           disabled={disabled}
+          aria-label="True"
         >
-          False
+          →
         </button>
       </div>
     );
-  }
-  
+}

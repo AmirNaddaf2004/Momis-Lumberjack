@@ -376,17 +376,47 @@ function App() {
         if (view !== "game") return null;
 
         return(
-            <GamePage
-                problem={problem}
-                score={score}
-                userData={userData}
-                timeLeft={timeLeft}
-                totalTime={ROUND_TIME}
-                onAnswer={submitAnswer}
-                loading={loading}
-                gameActive={gameActive}
-                onImageError={handleImageError}
-            />);
+            <div className="flex flex-col items-center gap-6 w-full max-w-md">
+                <div className="flex justify-between w-full">
+                    <p className="text-2xl font-bold">Score: {score}</p>
+                    {userData && (
+                        <div className="flex items-center gap-2">
+                            <img
+                                src={
+                                    userData.photo_url
+                                        ? `/api/avatar?url=${encodeURIComponent(
+                                              userData.photo_url
+                                          )}`
+                                        : DefaultAvatar
+                                }
+                                alt="Profile"
+                                className="w-12 h-12 rounded-full"
+                                onError={handleImageError}
+                            />
+                            <span>{userData.first_name}</span>
+                        </div>
+                    )}
+                </div>
+
+                <GamePage
+                    problem={problem}
+                    score={score}
+                    userData={userData}
+                    timeLeft={timeLeft}
+                    totalTime={ROUND_TIME}
+                    onAnswer={submitAnswer}
+                    loading={loading}
+                    gameActive={gameActive}
+                    onImageError={handleImageError}
+                />
+                <TimerCircle total={ROUND_TIME} left={timeLeft} />
+                <AnswerButtons
+                    onAnswer={submitAnswer}
+                    disabled={loading || !gameActive}
+                />
+            </div>
+        
+        );
 
         return problem ? (
             <GamePage

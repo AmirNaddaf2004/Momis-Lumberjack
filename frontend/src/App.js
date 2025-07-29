@@ -5,9 +5,8 @@ import React, {
     useRef,
     useMemo,
 } from "react";
-import ProblemCard from "./components/ProblemCard";
 import AnswerButtons from "./components/AnswerButtons";
-import TimerCircle from "./components/TimerCircle";
+import TimerBar from "./components/TimerBar";
 import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
@@ -409,7 +408,7 @@ function App() {
                     gameActive={gameActive}
                     onImageError={handleImageError}
                 />
-                <TimerCircle total={ROUND_TIME} left={timeLeft} />
+                <TimerBar total={ROUND_TIME} left={timeLeft} />
                 <AnswerButtons
                     onAnswer={submitAnswer}
                     disabled={loading || !gameActive}

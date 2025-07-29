@@ -5,7 +5,6 @@ const LumberjackGame = () => {
   const [playerPosition, setPlayerPosition] = useState(50);
   const [trees, setTrees] = useState([]);
   const [logs, setLogs] = useState([]);
-  const [score, setScore] = useState(0);
   const [isChopping, setIsChopping] = useState(false);
   const [gameActive, setGameActive] = useState(true);
   
@@ -52,19 +51,6 @@ const LumberjackGame = () => {
     };
   }, [logs, playerPosition, gameActive]);
   
-  // Handle keyboard controls
-  useEffect(() => {
-    if (!gameActive) return;
-    
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') movePlayer(-15);
-      if (e.key === 'ArrowRight') movePlayer(15);
-      if (e.key === ' ' || e.key === 'Spacebar') chopTree();
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameActive]);
   
   const movePlayer = (direction) => {
     setPlayerPosition(prev => Math.max(5, Math.min(95, prev + direction)));
@@ -111,14 +97,7 @@ const LumberjackGame = () => {
     // Reset chopping animation
     setTimeout(() => setIsChopping(false), 300);
   };
-  
-  const resetGame = () => {
-    setPlayerPosition(50);
-    setTrees([]);
-    setLogs([]);
-    setScore(0);
-    setGameActive(true);
-  };
+
 
   return (
     <div className="lumberjack-game"

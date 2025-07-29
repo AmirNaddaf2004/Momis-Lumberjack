@@ -121,7 +121,16 @@ const LumberjackGame = () => {
   };
 
   return (
-    <div className="lumberjack-game">
+    <div className="lumberjack-game"
+      style={{
+      backgroundImage: './../assets/GameWallpaper.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      padding: '20px',
+      borderRadius: '10px',
+      boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+    }}
+    >
       <div className="game-info">
         <h2>Lumberjack Challenge</h2>
         <p>Score: <strong>{score}</strong></p>

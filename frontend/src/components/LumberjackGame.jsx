@@ -89,9 +89,6 @@ const LumberjackGame = () => {
           top: 20
         }
       ]);
-      
-      // Increase score
-      setScore(prev => prev + 100);
     }
     
     // Reset chopping animation

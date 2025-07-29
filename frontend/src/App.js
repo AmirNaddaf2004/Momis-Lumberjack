@@ -5,16 +5,18 @@ import React, {
     useRef,
     useMemo,
 } from "react";
+import ProblemCard from "./components/ProblemCard";
+import AnswerButtons from "./components/AnswerButtons";
 import TimerCircle from "./components/TimerCircle";
 import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
-import LumberjackGame from "./components/LumberjackGame.jsx";
 
 const ROUND_TIME = 15;
 const API_BASE = "/api";
 
 function App() {
+    const [problem, setProblem] = useState(null);
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
     const [loading, setLoading] = useState(false);
     const [view, setView] = useState("auth");
@@ -33,12 +35,6 @@ function App() {
     });
     const [gameActive, setGameActive] = useState(false);
     const [currentGameEventId, setCurrentGameEventId] = useState(null);
-    const [lumberjackPosition, setLumberjackPosition] = useState('left');
-    const [nextBranch, setNextBranch] = useState({ 
-        side: 'none', 
-        level: 1 
-    });
-    const [showGameLobby, setShowGameLobby] = useState(false);
 
     const timerId = useRef(null);
     const abortControllerRef = useRef(null);
@@ -54,6 +50,7 @@ function App() {
     const handleGameOver = useCallback(
         (finalScore) => {
             clearResources();
+            setProblem(null);
             setFinalScore(finalScore);
             setView("board");
             setLeaderboardKey(Date.now());
@@ -61,177 +58,6 @@ function App() {
         },
         [clearResources]
     );
-
-    const handleTimeout = useCallback(async () => {
-        try {
-            const response = await fetch(`${API_BASE}/timeOut`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                console.error("Timeout API call failed");
-                handleGameOver(score);
-                return;
-            }
-
-            const data = await response.json();
-            handleGameOver(data.final_score);
-        } catch (error) {
-            console.error("Error during timeout handling:", error);
-            handleGameOver(score);
-        }
-    }, [token, score, handleGameOver]);
-
-    const startLocalTimer = useCallback(
-        (initialTime) => {
-            clearResources();
-            setTimeLeft(initialTime);
-
-            timerId.current = setInterval(() => {
-                setTimeLeft((prev) => {
-                    if (prev <= 1) {
-                        handleTimeout();
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        },
-        [clearResources, handleTimeout]
-    );
-
-    const moveLumberjack = useCallback(
-        async (direction) => {
-            if (loading || !token || !gameActive) return;
-
-            try {
-                setLoading(true);
-                setError(null);
-                abortControllerRef.current = new AbortController();
-
-                const response = await fetch(`${API_BASE}/move`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ direction }),
-                    signal: abortControllerRef.current.signal,
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(
-                        errorData.message || "Failed to move lumberjack"
-                    );
-                }
-
-                const data = await response.json();
-
-                if (data.status === "continue") {
-                    setLumberjackPosition(data.lumberjackPosition);
-                    setNextBranch(data.nextBranch);
-                    setScore(data.score);
-                    startLocalTimer(data.time_left);
-                } else if (data.status === "game_over") {
-                    handleGameOver(data.final_score);
-                }
-            } catch (err) {
-                if (err.name !== "AbortError") {
-                    console.error("Move error:", err);
-                    setError(err.message || "Failed to move");
-
-                    if (
-                        err.message.includes("token") ||
-                        err.message.includes("Unauthorized")
-                    ) {
-                        setIsAuthenticated(false);
-                        setView("auth");
-                    }
-                }
-            } finally {
-                if (!abortControllerRef.current?.signal.aborted) {
-                    setLoading(false);
-                }
-            }
-        },
-        [loading, handleGameOver, token, startLocalTimer, gameActive]
-    );
-
-    const startGame = useCallback(
-        async (eventId) => {
-            setCurrentGameEventId(eventId);
-            setView("game"); // مستقیماً به صفحه بازی بروید
-            setGameActive(true);
-
-            try {
-                setLoading(true);
-                setError(null);
-
-                const abortController = new AbortController();
-                abortControllerRef.current = abortController;
-
-                const response = await fetch(`${API_BASE}/start`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ eventId }),
-                    signal: abortController.signal,
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(
-                        errorData.message ||
-                            `Request failed with status ${response.status}`
-                    );
-                }
-
-                const data = await response.json();
-
-                if (!data || data.status !== "success") {
-                    throw new Error(data?.message || "Invalid server response");
-                }
-
-                setLumberjackPosition(data.lumberjackPosition);
-                setNextBranch(data.nextBranch);
-                startLocalTimer(data.time_left ?? ROUND_TIME);
-                setScore(data.score ?? 0);
-            } catch (err) {
-                if (err.name === "AbortError") {
-                    console.log("Request was aborted");
-                    return;
-                }
-
-                console.error("Game start error:", err);
-                setError(
-                    err.message.includes("Failed to fetch")
-                        ? "Could not connect to server. Please check your connection."
-                        : err.message
-                );
-                setGameActive(false);
-                setShowGameLobby(true); // بازگشت به لابی در صورت خطا
-            } finally {
-                if (!abortControllerRef.current?.signal.aborted) {
-                    setLoading(false);
-                }
-            }
-        },
-        [startLocalTimer, token]
-    );
-
-    const handleImageError = useCallback((e) => {
-        if (e.target.src !== DefaultAvatar) {
-            e.target.src = DefaultAvatar;
-        }
-        e.target.onerror = null;
-    }, []);
 
     const authenticateUser = useCallback(async () => {
         try {
@@ -243,7 +69,7 @@ function App() {
                     "Running in non-Telegram environment, skipping authentication"
                 );
                 setIsAuthenticated(true);
-                setShowGameLobby(true);
+                setView("home");
                 return;
             }
 
@@ -274,7 +100,7 @@ function App() {
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("userData", JSON.stringify(data.user));
             setIsAuthenticated(true);
-            setShowGameLobby(true); // نمایش لابی پس از احراز هویت
+            setView("lobby");
         } catch (error) {
             console.error("Authentication error:", error);
             setError(error.message);
@@ -285,11 +111,213 @@ function App() {
         }
     }, []);
 
+    // const handleTimeout = useCallback(async () => {
+    //     const response = await fetch(`${API_BASE}/timeOut`, {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${token}`,
+    //         },
+    //     });
+    //     if (!response.ok) {
+    //         const errorData = await response.json();
+    //         throw new Error(errorData.message || "Failed to submit answer");
+    //     }
+    //     const data = await response.json();
+    //     handleGameOver(data.final_score);
+    // }, [handleGameOver]);
+    // Replace your entire handleTimeout function with this simplified version
+    // Replace your entire handleTimeout function with this definitive, corrected version
+    const handleTimeout = useCallback(async () => {
+        try {
+            // ▼▼▼ THIS IS THE DEFINITIVE FIX ▼▼▼
+            // When the frontend timer ends, it MUST call the backend's timeout endpoint
+            // and wait for a response. This ensures the score is saved BEFORE we
+            // try to display the leaderboard.
+            const response = await fetch(`${API_BASE}/timeOut`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Pass the auth token
+                },
+            });
+
+            if (!response.ok) {
+                // If the backend call fails, still end the game on the frontend
+                console.error("Timeout API call failed");
+                handleGameOver(score); // Show leaderboard with the score we had
+                return;
+            }
+
+            const data = await response.json();
+            // Now, call handleGameOver with the CONFIRMED final score from the server
+            handleGameOver(data.final_score);
+            // ▲▲▲ END OF FIX ▲▲▲
+        } catch (error) {
+            console.error("Error during timeout handling:", error);
+            handleGameOver(score); // Fallback to end the game
+        }
+    }, [token, score, handleGameOver]); // Added `token` and `score` to dependency array
+
+    const startLocalTimer = useCallback(
+        (initialTime) => {
+            clearResources();
+            setTimeLeft(initialTime);
+
+            timerId.current = setInterval(() => {
+                setTimeLeft((prev) => {
+                    if (prev <= 1) {
+                        handleTimeout();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        },
+        [clearResources, handleTimeout]
+    );
+
+    const submitAnswer = useCallback(
+        async (answer) => {
+            if (!problem || loading || !token) return;
+
+            try {
+                setLoading(true);
+                setError(null);
+                abortControllerRef.current = new AbortController();
+
+                const response = await fetch(`${API_BASE}/answer`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ answer: Boolean(answer) }),
+                    signal: abortControllerRef.current.signal,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(
+                        errorData.message || "Failed to submit answer"
+                    );
+                }
+
+                const data = await response.json();
+
+                if (data.status === "continue") {
+                    setProblem(data.problem);
+                    setScore(data.score);
+                    startLocalTimer(data.time_left);
+                } else {
+                    handleGameOver(data.final_score);
+                }
+            } catch (err) {
+                if (err.name !== "AbortError") {
+                    console.error("Answer error:", err);
+                    setError(err.message || "Failed to submit answer");
+
+                    if (
+                        err.message.includes("token") ||
+                        err.message.includes("Unauthorized")
+                    ) {
+                        setIsAuthenticated(false);
+                        setView("auth");
+                    }
+                }
+            } finally {
+                if (!abortControllerRef.current?.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        },
+        [problem, loading, handleGameOver, token, startLocalTimer]
+    );
+
+    // MODIFIED: The `startGame` function now accepts `eventId`
+    const startGame = useCallback(
+        async (eventId) => {
+            setCurrentGameEventId(eventId); // شناسه رویداد این دور از بازی را به خاطر بسپار
+
+            // It now takes eventId as an argument
+            if (!isAuthenticated || !token) {
+                setError("Please authenticate first");
+                setView("auth");
+                return;
+            }
+
+            try {
+                setLoading(true);
+                setError(null);
+                setGameActive(true);
+
+                const abortController = new AbortController();
+                abortControllerRef.current = abortController;
+
+                const response = await fetch(`${API_BASE}/start`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    // Send the eventId (which can be null) in the request body
+                    body: JSON.stringify({ eventId }),
+                    signal: abortController.signal,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(
+                        errorData.message ||
+                            `Request failed with status ${response.status}`
+                    );
+                }
+
+                const data = await response.json();
+
+                if (!data || data.status !== "success") {
+                    throw new Error(data?.message || "Invalid server response");
+                }
+
+                setProblem(data.problem);
+                startLocalTimer(data.time_left ?? ROUND_TIME);
+                setScore(data.score ?? 0);
+                setView("game"); // Set the view to 'game' to start playing
+            } catch (err) {
+                if (err.name === "AbortError") {
+                    console.log("Request was aborted");
+                    return;
+                }
+
+                console.error("Game start error:", err);
+                setError(
+                    err.message.includes("Failed to fetch")
+                        ? "Could not connect to server. Please check your connection."
+                        : err.message
+                );
+                setGameActive(false);
+                setView("lobby"); // On error, go back to the lobby, not 'home'
+            } finally {
+                if (!abortControllerRef.current?.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        },
+        [startLocalTimer, isAuthenticated, token]
+    );
+
+    const handleImageError = useCallback((e) => {
+        if (e.target.src !== DefaultAvatar) {
+            e.target.src = DefaultAvatar;
+        }
+        e.target.onerror = null;
+    }, []);
+
     useEffect(() => {
         const initAuth = async () => {
             if (token && userData) {
                 setIsAuthenticated(true);
-                setShowGameLobby(true);
+                setView("lobby");
                 setAuthLoading(false);
             } else {
                 await authenticateUser();
@@ -314,7 +342,6 @@ function App() {
         setUserData(null);
         setIsAuthenticated(false);
         setView("auth");
-        setShowGameLobby(false);
     }, []);
 
     const authContent = useMemo(() => {
@@ -322,11 +349,11 @@ function App() {
 
         return (
             <div className="flex flex-col items-center gap-6 w-full max-w-md">
-                <h2 className="text-2xl font-bold">به بازی چوب‌بر خوش آمدید</h2>
+                <h2 className="text-2xl font-bold">Welcome to Math Game</h2>
                 <p className="text-center">
                     {window.Telegram?.WebApp
-                        ? "لطفاً برای بازی، احراز هویت تلگرام را انجام دهید"
-                        : "این بازی در محیط تلگرام طراحی شده است. لطفاً از طریق تلگرام بازی کنید."}
+                        ? "Please authenticate with Telegram to play the game."
+                        : "This game is designed to run inside Telegram. Please open it in Telegram to play."}
                 </p>
                 {error && <p className="text-red-300">{error}</p>}
                 {window.Telegram?.WebApp && (
@@ -338,17 +365,19 @@ function App() {
                         }`}
                     >
                         {authLoading
-                            ? "در حال احراز هویت..."
-                            : "احراز هویت با تلگرام"}
+                            ? "Authenticating..."
+                            : "Authenticate with Telegram"}
                     </button>
                 )}
             </div>
         );
     }, [view, authLoading, error, authenticateUser]);
 
+    // NEW: This content will render the Game Lobby
     const lobbyContent = useMemo(() => {
-        if (!showGameLobby) return null;
+        if (view !== "lobby") return null;
 
+        // Pass the necessary user data and functions to the lobby component
         return (
             <GameLobby
                 onGameStart={startGame}
@@ -357,15 +386,15 @@ function App() {
                 onImageError={handleImageError}
             />
         );
-    }, [showGameLobby, startGame, userData, handleLogout, handleImageError]);
-
+    }, [view, startGame, userData, handleLogout, handleImageError]);
+    // محتوای بازی
     const gameContent = useMemo(() => {
         if (view !== "game") return null;
 
-        return (
+        return problem ? (
             <div className="flex flex-col items-center gap-6 w-full max-w-md">
                 <div className="flex justify-between w-full">
-                    <p className="text-2xl font-bold">امتیاز: {score}</p>
+                    <p className="text-2xl font-bold">Score: {score}</p>
                     {userData && (
                         <div className="flex items-center gap-2">
                             <img
@@ -385,27 +414,34 @@ function App() {
                     )}
                 </div>
 
-                <LumberjackGame 
-                    lumberjackPosition={lumberjackPosition}
-                    nextBranch={nextBranch}
-                    onMove={moveLumberjack}
+                <ProblemCard text={problem} />
+                <TimerCircle total={ROUND_TIME} left={timeLeft} />
+                <AnswerButtons
+                    onAnswer={submitAnswer}
                     disabled={loading || !gameActive}
                 />
-                
-                <TimerCircle total={ROUND_TIME} left={timeLeft} />
             </div>
+        ) : (
+            <button
+                onClick={GameLobby}
+                disabled={loading}
+                className={`px-8 py-4 bg-white text-indigo-600 rounded-2xl text-2xl font-bold shadow-xl transition-transform ${
+                    loading ? "opacity-50" : "hover:scale-105"
+                }`}
+            >
+                {loading ? "Loading..." : "Start Game"}
+            </button>
         );
     }, [
         view,
+        problem,
         score,
         timeLeft,
         loading,
+        submitAnswer,
         handleImageError,
         userData,
         gameActive,
-        lumberjackPosition,
-        nextBranch,
-        moveLumberjack
     ]);
 
     const leaderboardContent = useMemo(
@@ -416,9 +452,9 @@ function App() {
                     API_BASE={API_BASE}
                     finalScore={finalScore}
                     onReplay={() => startGame(currentGameEventId)}
-                    onHome={() => setShowGameLobby(true)}
+                    onHome={() => setView("lobby")}
                     userData={userData}
-                    eventId={currentGameEventId}
+                    eventId={currentGameEventId} // شناسه رویداد ذخیره شده را به لیدربورد پاس بده
                 />
             ),
         [
@@ -433,6 +469,7 @@ function App() {
 
     return (
         <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-4">
+            {/* نمایش خطا */}
             {error && (
                 <div
                     className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-md shadow-lg z-50 max-w-md text-center animate-fade-in"
@@ -454,6 +491,7 @@ function App() {
             {gameContent}
             {leaderboardContent}
 
+            {/* نمایش لوگو فقط در صفحه بازی */}
             {view === "game" && (
                 <img
                     src={`${process.env.PUBLIC_URL}/teamlogo.png?v=2`}

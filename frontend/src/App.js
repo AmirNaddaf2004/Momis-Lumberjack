@@ -11,6 +11,7 @@ import TimerCircle from "./components/TimerCircle";
 import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
+import GamePage from "./components/LumberjackGame"; // مسیر صحیح کامپوننت خود را وارد کنید
 
 const ROUND_TIME = 15;
 const API_BASE = "/api";
@@ -111,23 +112,6 @@ function App() {
         }
     }, []);
 
-    // const handleTimeout = useCallback(async () => {
-    //     const response = await fetch(`${API_BASE}/timeOut`, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${token}`,
-    //         },
-    //     });
-    //     if (!response.ok) {
-    //         const errorData = await response.json();
-    //         throw new Error(errorData.message || "Failed to submit answer");
-    //     }
-    //     const data = await response.json();
-    //     handleGameOver(data.final_score);
-    // }, [handleGameOver]);
-    // Replace your entire handleTimeout function with this simplified version
-    // Replace your entire handleTimeout function with this definitive, corrected version
     const handleTimeout = useCallback(async () => {
         try {
             // ▼▼▼ THIS IS THE DEFINITIVE FIX ▼▼▼
@@ -391,36 +375,31 @@ function App() {
     const gameContent = useMemo(() => {
         if (view !== "game") return null;
 
-        return problem ? (
-            <div className="flex flex-col items-center gap-6 w-full max-w-md">
-                <div className="flex justify-between w-full">
-                    <p className="text-2xl font-bold">Score: {score}</p>
-                    {userData && (
-                        <div className="flex items-center gap-2">
-                            <img
-                                src={
-                                    userData.photo_url
-                                        ? `/api/avatar?url=${encodeURIComponent(
-                                              userData.photo_url
-                                          )}`
-                                        : DefaultAvatar
-                                }
-                                alt="Profile"
-                                className="w-12 h-12 rounded-full"
-                                onError={handleImageError}
-                            />
-                            <span>{userData.first_name}</span>
-                        </div>
-                    )}
-                </div>
+        return(
+            <GamePage
+                problem={problem}
+                score={score}
+                userData={userData}
+                timeLeft={timeLeft}
+                totalTime={ROUND_TIME}
+                onAnswer={submitAnswer}
+                loading={loading}
+                gameActive={gameActive}
+                onImageError={handleImageError}
+            />);
 
-                <ProblemCard text={problem} />
-                <TimerCircle total={ROUND_TIME} left={timeLeft} />
-                <AnswerButtons
-                    onAnswer={submitAnswer}
-                    disabled={loading || !gameActive}
-                />
-            </div>
+        return problem ? (
+            <GamePage
+                problem={problem}
+                score={score}
+                userData={userData}
+                timeLeft={timeLeft}
+                totalTime={ROUND_TIME}
+                onAnswer={submitAnswer}
+                loading={loading}
+                gameActive={gameActive}
+                onImageError={handleImageError}
+            />
         ) : (
             <button
                 onClick={GameLobby}
@@ -442,6 +421,8 @@ function App() {
         handleImageError,
         userData,
         gameActive,
+        startGame,
+        currentGameEventId,
     ]);
 
     const leaderboardContent = useMemo(

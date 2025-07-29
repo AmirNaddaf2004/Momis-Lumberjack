@@ -3,10 +3,10 @@
 root@DESKTOP-AGHA-MOSTAFA:~# ssh mostafa@65.109.186.25
 <!-- دریافت اپدیت ها از گیتهاب -->
 mostafa@ubuntu-4gb-hel1-4:~$ cd ../../var/www/lumberjack/
-mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ git fetch origin
-mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ git pull
+mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ sudo git fetch origin
+mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ sudo git pull
 <!-- ساخت بیلد جدید فرانت -->
-mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ cd frontend && npm run build && cd ..
+mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ cd frontend && sudo npm run build && cd ..
 <!-- ریست کردن ران خودکار بک اند -->
 mostafa@ubuntu-4gb-hel1-4:/var/www/mini-app$ pm2 restart lumberjack-back
 

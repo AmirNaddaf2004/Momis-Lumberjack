@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 
 const { User, Score, Reward, sequelize } = require("./DataBase/models");
 const MaxTime = 15;
+const rewardTime = 2;
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -56,7 +57,9 @@ class Player {
         
         // حالت‌های جدید برای بازی LumberJack
         this.lumberjackPosition = 'left'; // موقعیت شروع چوب‌بر
-        this.nextBranch = null; // شاخه بعدی
+        firstBranch = GameEngine.generate(1, 'none').side;
+        secondBranch = GameEngine.generate(1, firstBranch).side;
+        this.branches = ['none', 'none', firstBranch, secondBranch, GameEngine.generate(secondBranch),];
         this.level = 1; // سطح فعلی بازی
 
         logger.info(`New player created: ${jwtPayload?.userId}`);
@@ -179,8 +182,6 @@ class LumberjackGame {
             
             // حالت‌های جدید برای بازی LumberJack
             player.lumberjackPosition = 'left';
-            player.nextBranch = GameEngine.generate(player.level);
-
             this.runTimer(playerId);
 
             logger.info(
@@ -199,7 +200,7 @@ class LumberjackGame {
                 user: user.toJSON(),
                 // داده‌های جدید برای بازی
                 lumberjackPosition: player.lumberjackPosition,
-                nextBranch: player.nextBranch
+                branches: player.branches
             };
         } catch (e) {
             logger.error(`Start game error: ${e.message}`, { stack: e.stack });
@@ -283,7 +284,7 @@ class LumberjackGame {
             player.lumberjackPosition = direction;
 
             // بررسی برخورد با شاخه
-            if (player.nextBranch.side === direction && player.nextBranch.side !== 'none') {
+            if (player.branches[1] === direction && player.branches[1] !== 'none') {
                 // برخورد با شاخه - پایان بازی
                 player.game_active = false;
 
@@ -315,7 +316,14 @@ class LumberjackGame {
             // افزایش امتیاز و تولید شاخه جدید
             player.score += 1;
             player.level += 1;
-            player.nextBranch = GameEngine.generate(player.level);
+            player.time_left += rewardTime;
+            nextBranch = GameEngine.generate(player.level, player.branches[-1]);
+            for (i = 1; i < 5; i++){
+                if (i != 4)
+                    player.branches[i] = player.branches[i+1];
+                else
+                    player.branches[i] = nextBranch;
+            }
 
             return {
                 status: "continue",
@@ -324,7 +332,7 @@ class LumberjackGame {
                 game_active: true,
                 // داده‌های جدید برای بازی
                 lumberjackPosition: player.lumberjackPosition,
-                nextBranch: player.nextBranch
+                branches: player.branches
             };
         } catch (e) {
             logger.error(`Move lumberjack error: ${e.message}`);
@@ -434,7 +442,7 @@ app.post("/api/start", authenticateToken, async (req, res) => {
 
 app.post("/api/move", authenticateToken, async (req, res) => {
     try {
-        const { direction } = req.body;
+        const { direction } = req.body ? 'left' : 'right';
         const user = req.user;
 
         if (!direction || !['left', 'right'].includes(direction)) {

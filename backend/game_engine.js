@@ -1,5 +1,5 @@
 class GameEngine {
-    static generate(level) {
+    static generate(level, last) {
         // افزایش سختی بازی با افزایش سطح
         const branchProbability = Math.min(0.7, 0.3 + (level * 0.05));
         
@@ -11,6 +11,8 @@ class GameEngine {
         if (Math.random() < branchProbability) {
             // انتخاب تصادفی چپ یا راست (به جز 'none')
             side = Math.random() > 0.5 ? 'left' : 'right';
+            if (last !== 'none' && last !== side)
+                side = 'none';
         }
         
         return {

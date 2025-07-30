@@ -16,7 +16,8 @@ const ROUND_TIME = 15;
 const API_BASE = "/api";
 
 function App() {
-    const [problem, setProblem] = useState(null);
+    const [branches, setBranches] = useState(null);
+    const [lumberjackPos, setPosition] = useState(null);
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
     const [loading, setLoading] = useState(false);
     const [view, setView] = useState("auth");
@@ -162,14 +163,14 @@ function App() {
 
     const submitAnswer = useCallback(
         async (answer) => {
-            if (!problem || loading || !token) return;
+            if (!branches || loading || !token) return;
 
             try {
                 setLoading(true);
                 setError(null);
                 abortControllerRef.current = new AbortController();
 
-                const response = await fetch(`${API_BASE}/answer`, {
+                const response = await fetch(`${API_BASE}/move`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -189,7 +190,8 @@ function App() {
                 const data = await response.json();
 
                 if (data.status === "continue") {
-                    setProblem(data.problem);
+                    setBranches(data.branches);
+                    setPosition(data.lumberjackPosition);
                     setScore(data.score);
                     startLocalTimer(data.time_left);
                 } else {
@@ -214,7 +216,7 @@ function App() {
                 }
             }
         },
-        [problem, loading, handleGameOver, token, startLocalTimer]
+        [branches, loading, handleGameOver, token, startLocalTimer]
     );
 
     // MODIFIED: The `startGame` function now accepts `eventId`
@@ -262,7 +264,8 @@ function App() {
                     throw new Error(data?.message || "Invalid server response");
                 }
 
-                setProblem(data.problem);
+                setBranches(data.branches);
+                setPosition(data.lumberjackPosition);
                 startLocalTimer(data.time_left ?? ROUND_TIME);
                 setScore(data.score ?? 0);
                 setView("game"); // Set the view to 'game' to start playing
@@ -398,15 +401,10 @@ function App() {
                 </div>
 
                 <GamePage
-                    problem={problem}
-                    score={score}
-                    userData={userData}
-                    timeLeft={timeLeft}
-                    totalTime={ROUND_TIME}
-                    onAnswer={submitAnswer}
+                    branches={branches}
+                    lumberjackPos={lumberjackPos}
                     loading={loading}
                     gameActive={gameActive}
-                    onImageError={handleImageError}
                 />
                 <TimerBar total={ROUND_TIME} left={timeLeft} />
                 <AnswerButtons

@@ -48,7 +48,7 @@ class Player {
         this.jwtPayload = jwtPayload;
         this.score = 0;
         this.top_score = 0;
-        this.time_left = MaxTime;
+        this.time_left = MaxTime / 2;
         this.game_active = false;
         this.timer = null;
         this.should_stop = false;
@@ -317,6 +317,7 @@ class LumberjackGame {
             player.score += 1;
             player.level += 1;
             player.time_left += rewardTime;
+            player.time_left = min(MaxTime, player.time_left);
             var nextBranch = GameEngine.generate(player.level, player.branches[-1]);
             for (var i = 1; i < 5; i++){
                 if (i != 4)

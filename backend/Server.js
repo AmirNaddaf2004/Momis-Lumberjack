@@ -443,7 +443,7 @@ app.post("/api/start", authenticateToken, async (req, res) => {
 app.post("/api/move", authenticateToken, async (req, res) => {
     try {
         console.log(req.body);
-        const { direction } = req.body ? 'left' : 'right';
+        const direction = req.body.answer ? 'left' : 'right';
         const user = req.user;
 
         if (!direction || !['left', 'right'].includes(direction)) {

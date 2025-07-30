@@ -51,7 +51,7 @@ function App() {
     const handleGameOver = useCallback(
         (finalScore) => {
             clearResources();
-            setProblem(null);
+            setBranches(null);
             setFinalScore(finalScore);
             setView("board");
             setLeaderboardKey(Date.now());
@@ -414,34 +414,11 @@ function App() {
             </div>
         
         );
-
-        return problem ? (
-            <GamePage
-                problem={problem}
-                score={score}
-                userData={userData}
-                timeLeft={timeLeft}
-                totalTime={ROUND_TIME}
-                onAnswer={submitAnswer}
-                loading={loading}
-                gameActive={gameActive}
-                onImageError={handleImageError}
-            />
-        ) : (
-            <button
-                onClick={GameLobby}
-                disabled={loading}
-                className={`px-8 py-4 bg-white text-indigo-600 rounded-2xl text-2xl font-bold shadow-xl transition-transform ${
-                    loading ? "opacity-50" : "hover:scale-105"
-                }`}
-            >
-                {loading ? "Loading..." : "Start Game"}
-            </button>
-        );
     }, [
         view,
-        problem,
         score,
+        branches,
+        lumberjackPos,
         timeLeft,
         loading,
         submitAnswer,

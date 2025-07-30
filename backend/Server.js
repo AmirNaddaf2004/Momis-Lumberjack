@@ -57,8 +57,8 @@ class Player {
         
         // حالت‌های جدید برای بازی LumberJack
         this.lumberjackPosition = 'left'; // موقعیت شروع چوب‌بر
-        firstBranch = GameEngine.generate(1, 'none').side;
-        secondBranch = GameEngine.generate(1, firstBranch).side;
+        var firstBranch = GameEngine.generate(1, 'none').side;
+        var secondBranch = GameEngine.generate(1, firstBranch).side;
         this.branches = ['none', 'none', firstBranch, secondBranch, GameEngine.generate(secondBranch),];
         this.level = 1; // سطح فعلی بازی
 
@@ -317,7 +317,7 @@ class LumberjackGame {
             player.score += 1;
             player.level += 1;
             player.time_left += rewardTime;
-            nextBranch = GameEngine.generate(player.level, player.branches[-1]);
+            var nextBranch = GameEngine.generate(player.level, player.branches[-1]);
             for (i = 1; i < 5; i++){
                 if (i != 4)
                     player.branches[i] = player.branches[i+1];

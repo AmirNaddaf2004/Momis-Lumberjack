@@ -73,7 +73,7 @@ The tournament has now officially ended. Keep practicing for the next event!`;
 
 function startListening() {
     bot.onText(/\/start/, (msg) => {
-        const welcomeText = `🎉 Welcome, *${msg.from.first_name}*!\n\nClick the button below to play **Math Battle**!`;
+        const welcomeText = `🎉 Welcome, *${msg.from.first_name}*!\n\nClick the button below to play **Lumberjack Game**!`;
         const options = {
             parse_mode: 'Markdown',
             reply_markup: {

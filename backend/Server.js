@@ -325,6 +325,7 @@ class LumberjackGame {
                 else
                     player.branches[i] = nextBranch;
             }
+            console.log(player.level + "        " + player.branches);
 
             return {
                 status: "continue",

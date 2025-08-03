@@ -59,7 +59,7 @@ class Player {
         this.lumberjackPosition = 'left'; // موقعیت شروع چوب‌بر
         var firstBranch = GameEngine.generate(1, 'none').side;
         var secondBranch = GameEngine.generate(1, firstBranch).side;
-        this.branches = ['none', 'none', firstBranch, secondBranch, GameEngine.generate(secondBranch),];
+        this.branches = ['none', 'none', firstBranch, secondBranch, GameEngine.generate(1, secondBranch).side];
         this.level = 1; // سطح فعلی بازی
 
         logger.info(`New player created: ${jwtPayload?.userId}`);
@@ -318,7 +318,7 @@ class LumberjackGame {
             player.level += 1;
             player.time_left += rewardTime;
             player.time_left = Math.min(MaxTime, player.time_left);
-            var nextBranch = GameEngine.generate(player.level, player.branches[-1]);
+            var nextBranch = GameEngine.generate(player.level, player.branches[-1]).side;
             for (var i = 1; i < 5; i++){
                 if (i != 4)
                     player.branches[i] = player.branches[i+1];

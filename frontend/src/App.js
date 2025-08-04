@@ -10,7 +10,7 @@ import TimerBar from "./components/TimerBar";
 import Leaderboard from "./components/Leaderboard";
 import DefaultAvatar from "./assets/default-avatar.png";
 import GameLobby from "./components/GameLobby";
-import GamePage from "./components/LumberjackGame"; // مسیر صحیح کامپوننت خود را وارد کنید
+import GamePage from "./components/LumberjackGame"; 
 
 const ROUND_TIME = 15;
 const API_BASE = "/api";
@@ -378,42 +378,22 @@ function App() {
         if (view !== "game") return null;
 
         return(
-            <div className="flex flex-col items-center gap-6 w-full max-w-md">
-                <div className="flex justify-between w-full">
-                    <p className="text-2xl font-bold">Score: {score}</p>
-                    {userData && (
-                        <div className="flex items-center gap-2">
-                            <img
-                                src={
-                                    userData.photo_url
-                                        ? `/api/avatar?url=${encodeURIComponent(
-                                              userData.photo_url
-                                          )}`
-                                        : DefaultAvatar
-                                }
-                                alt="Profile"
-                                className="w-12 h-12 rounded-full"
-                                onError={handleImageError}
-                            />
-                            <span>{userData.first_name}</span>
-                        </div>
-                    )}
-                </div>
-
-                <GamePage
+                <div className="flex flex-col items-center gap-6 w-full max-w-md">
+                <LumberjackGameUI
                     branches={branches}
                     lumberjackPos={lumberjackPos}
                     loading={loading}
                     gameActive={gameActive}
+                    score={score} // اضافه کردن پروپ score
+                    userData={userData} // اضافه کردن پروپ userData
                 />
                 <TimerBar total={ROUND_TIME} left={timeLeft} />
                 <AnswerButtons
                     onAnswer={submitAnswer}
                     disabled={loading || !gameActive}
                 />
-            </div>
-        
-        );
+                </div>
+            );
     }, [
         view,
         score,

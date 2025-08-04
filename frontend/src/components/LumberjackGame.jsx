@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
+const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
 
-  // Logic for shaking branches
+  // منطق لرزش شاخه‌ها
   useEffect(() => {
     if (!gameActive || loading) {
       setShakeBranch(null);
@@ -19,7 +19,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
     return () => clearInterval(interval);
   }, [gameActive, loading, branches.length]);
 
-  // Render branches with new UI
+  // رندر شاخه‌ها با جزئیات جدید
   const renderBranches = () => {
     return branches.map((direction, index) => (
       <div
@@ -35,7 +35,6 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
             <div className="absolute right-12 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
           </div>
         )}
-
         {direction === 'right' && (
           <div className="absolute right-1/2 -mr-28 w-40 h-20">
             <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-l-full shadow-lg"></div>
@@ -47,14 +46,14 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
     ));
   };
 
-  // Render the lumberjack character
+  // رندر کاراکتر چوب‌بر
   const renderLumberjack = () => (
     <div
       className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
         lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
       }`}
     >
-      <div className="relative w-12 h-20"> {/* Half the original size (w-12, h-20) */}
+      <div className="relative w-12 h-20">
         {/* Plaid shirt */}
         <div className="absolute top-0 left-0 w-full h-full bg-red-600 rounded-lg">
           <div className="absolute inset-0 bg-red-800 opacity-30"></div>
@@ -107,6 +106,21 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
       <div className="absolute top-1/4 left-1/4 w-32 h-16 bg-white rounded-full shadow-md animate-cloud-move-1"></div>
       <div className="absolute top-1/2 left-3/4 w-40 h-20 bg-white rounded-full shadow-md animate-cloud-move-2"></div>
       <div className="absolute top-1/3 left-1/2 w-24 h-12 bg-white rounded-full shadow-md animate-cloud-move-3"></div>
+
+      {/* نمایش امتیاز و اطلاعات بازیکن در بالای صفحه بازی */}
+      <div className="absolute top-4 left-0 w-full flex justify-between items-center px-4 z-30">
+        <p className="text-2xl font-bold text-gray-800">Score: {score}</p>
+        {userData && (
+          <div className="flex items-center gap-2">
+            <img
+              src={userData.photo_url || '/path/to/default-avatar.png'} // مسیر عکس پیش‌فرض را به درستی تنظیم کنید
+              alt="Profile"
+              className="w-12 h-12 rounded-full border-2 border-white shadow-md"
+            />
+            <span className="text-gray-800 font-bold">{userData.first_name}</span>
+          </div>
+        )}
+      </div>
 
       {/* Loading state */}
       {loading && (

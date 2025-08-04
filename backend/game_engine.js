@@ -3,7 +3,7 @@ class GameEngine {
         // ایجاد شاخه‌ها به صورت تصادفی
         const branches = ['left', 'right', 'none'];
         let side = 'none';
-        
+        console.log("last is: " + last);
 
         side = Math.random() > 0.5 ? 'left' : 'right';
         if (last !== 'none' && last !== side)

@@ -50,23 +50,20 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
   // Render the lumberjack character
   const renderLumberjack = () => (
     <div
-      className={`absolute bottom-32 transition-all duration-300 ease-in-out z-10 ${
-        lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-full' : 'right-1/2 transform translate-x-full'
+      className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
+        lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
       }`}
     >
-      {/* --- Start of the Lumberjack's body code --- */}
-      <div className="relative w-24 h-40">
+      <div className="relative w-12 h-20"> {/* Half the original size (w-12, h-20) */}
         {/* Plaid shirt */}
         <div className="absolute top-0 left-0 w-full h-full bg-red-600 rounded-lg">
           <div className="absolute inset-0 bg-red-800 opacity-30"></div>
-          {/* Plaid pattern - vertical */}
           <div className="absolute inset-0 flex">
             <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
             <div className="w-1/4 h-full"></div>
             <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
             <div className="w-1/4 h-full"></div>
           </div>
-          {/* Plaid pattern - horizontal */}
           <div className="absolute inset-0 flex flex-col">
             <div className="h-1/4 w-full bg-red-800 opacity-20"></div>
             <div className="h-1/4 w-full"></div>
@@ -75,33 +72,32 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
           </div>
         </div>
         {/* Belt */}
-        <div className="absolute bottom-16 w-full h-4 bg-gray-900"></div>
+        <div className="absolute bottom-8 w-full h-2 bg-gray-900"></div>
         {/* Legs */}
-        <div className="absolute bottom-0 w-full h-16 flex justify-center">
+        <div className="absolute bottom-0 w-full h-8 flex justify-center">
           <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
           <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
         </div>
         {/* Arms */}
-        <div className="absolute top-8 left-full transform -translate-x-1/2 w-16 h-6 bg-red-600 rounded-full -rotate-12"></div>
-        <div className="absolute top-8 right-full transform translate-x-1/2 w-16 h-6 bg-red-600 rounded-full rotate-12"></div>
+        <div className="absolute top-4 left-full transform -translate-x-1/2 w-8 h-3 bg-red-600 rounded-full -rotate-12"></div>
+        <div className="absolute top-4 right-full transform translate-x-1/2 w-8 h-3 bg-red-600 rounded-full rotate-12"></div>
         {/* Head */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-yellow-200 rounded-full">
+        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full">
           {/* Beard */}
           <div className="absolute bottom-0 w-full h-1/2 bg-black rounded-b-full"></div>
           {/* Hat */}
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-blue-800 rounded-t-full">
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-blue-900 rounded-t-full"></div>
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-blue-800 rounded-t-full">
+            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-blue-900 rounded-t-full"></div>
           </div>
         </div>
         {/* Axe */}
-        <div className="absolute -right-4 -top-8 w-24 h-12">
-          <div className="absolute top-1/2 w-full h-4 bg-gray-500 rounded-full shadow-md"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-4 h-12 bg-stone-800 rounded-t-full"></div>
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-red-600 rounded-b-full rotate-45"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-gray-400 rounded-b-full"></div>
+        <div className="absolute -right-2 -top-4 w-12 h-6">
+          <div className="absolute top-1/2 w-full h-2 bg-gray-500 rounded-full shadow-md"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-2 h-6 bg-stone-800 rounded-t-full"></div>
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-red-600 rounded-b-full rotate-45"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-gray-400 rounded-b-full"></div>
         </div>
       </div>
-      {/* --- End of the Lumberjack's body code --- */}
     </div>
   );
 
@@ -136,7 +132,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
           </div>
         </div>
 
-        {/* Lumberjack character is now rendered outside the tree's div */}
+        {/* Lumberjack character is now rendered with smaller size and correct position */}
         {renderLumberjack()}
       </div>
 

@@ -318,7 +318,7 @@ class LumberjackGame {
             player.level += 1;
             player.time_left += rewardTime;
             player.time_left = Math.min(MaxTime, player.time_left);
-            var nextBranch = GameEngine.generate(player.level, player.branches[-1]).side;
+            var nextBranch = GameEngine.generate(player.level, player.branches[4]).side;
             for (var i = 1; i < 5; i++){
                 if (i != 4)
                     player.branches[i] = player.branches[i+1];

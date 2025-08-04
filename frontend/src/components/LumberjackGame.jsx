@@ -30,14 +30,19 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
       >
         {direction === 'left' && (
           <div className="absolute left-1/2 -ml-28 w-40 h-20">
+            {/* شاخه */}
             <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-r-full shadow-lg"></div>
+            {/* برگ‌ها */}
             <div className="absolute right-0 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
             <div className="absolute right-12 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
           </div>
         )}
+
         {direction === 'right' && (
           <div className="absolute right-1/2 -mr-28 w-40 h-20">
+            {/* شاخه */}
             <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-l-full shadow-lg"></div>
+            {/* برگ‌ها */}
             <div className="absolute left-0 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
             <div className="absolute left-12 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
           </div>
@@ -53,7 +58,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
         lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
       }`}
     >
-      <div className="relative w-12 h-20">
+      <div className="relative w-12 h-20"> {/* Half the original size (w-12, h-20) */}
         {/* Plaid shirt */}
         <div className="absolute top-0 left-0 w-full h-full bg-red-600 rounded-lg">
           <div className="absolute inset-0 bg-red-800 opacity-30"></div>
@@ -78,7 +83,9 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
           <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
         </div>
         {/* Arms */}
+        {/* دست چپ */}
         <div className="absolute top-4 left-full transform -translate-x-1/2 w-8 h-3 bg-red-600 rounded-full -rotate-12"></div>
+        {/* دست راست */}
         <div className="absolute top-4 right-full transform translate-x-1/2 w-8 h-3 bg-red-600 rounded-full rotate-12"></div>
         {/* Head */}
         <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full">
@@ -89,19 +96,19 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
             <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-blue-900 rounded-t-full"></div>
           </div>
         </div>
-        {/* Axe */}
-        <div className="absolute -right-2 -top-4 w-12 h-6">
-          <div className="absolute top-1/2 w-full h-2 bg-gray-500 rounded-full shadow-md"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-2 h-6 bg-stone-800 rounded-t-full"></div>
-          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-red-600 rounded-b-full rotate-45"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-gray-400 rounded-b-full"></div>
+        {/* Axe position adjusted */}
+        <div className={`absolute top-1/4 ${lumberjackPos === 'left' ? 'right-full translate-x-1/2 -rotate-45' : 'left-full -translate-x-1/2 rotate-45'} w-12 h-6`}>
+            {/* Axe handle */}
+            <div className="absolute top-1/2 left-0 w-full h-2 bg-stone-800 rounded-full"></div>
+            {/* Axe blade */}
+            <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-400 rounded-full rotate-45"></div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="relative w-full h-[66.6667vh] overflow-hidden bg-sky-300 font-sans">
+    <div className="relative w-full h-screen overflow-hidden bg-sky-300 font-sans">
       {/* Background clouds */}
       <div className="absolute top-1/4 left-1/4 w-32 h-16 bg-white rounded-full shadow-md animate-cloud-move-1"></div>
       <div className="absolute top-1/2 left-3/4 w-40 h-20 bg-white rounded-full shadow-md animate-cloud-move-2"></div>

@@ -1,7 +1,7 @@
 class GameEngine {
     static generate(level, last, lastSide='none') {
         if (last === 'none'){
-            let side = lastSide === 'right' ? 'right' : 'left';
+            let side = lastSide === 'right' ? 'left' : 'right';
             return {
                 side: side,
                 level: level

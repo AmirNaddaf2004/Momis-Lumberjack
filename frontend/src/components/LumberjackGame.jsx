@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
 
-  // منطق لرزش شاخه‌ها
+  // Logic for shaking branches
   useEffect(() => {
     if (!gameActive || loading) {
       setShakeBranch(null);
@@ -19,7 +19,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
     return () => clearInterval(interval);
   }, [gameActive, loading, branches.length]);
 
-  // رندر شاخه‌ها با جزئیات جدید
+  // Render branches with new UI
   const renderBranches = () => {
     return branches.map((direction, index) => (
       <div
@@ -46,7 +46,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
     ));
   };
 
-  // رندر کاراکتر چوب‌بر
+  // Render the lumberjack character
   const renderLumberjack = () => (
     <div
       className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
@@ -101,7 +101,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   );
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-sky-300 font-sans">
+    <div className="relative w-full h-[66.6667vh] overflow-hidden bg-sky-300 font-sans">
       {/* Background clouds */}
       <div className="absolute top-1/4 left-1/4 w-32 h-16 bg-white rounded-full shadow-md animate-cloud-move-1"></div>
       <div className="absolute top-1/2 left-3/4 w-40 h-20 bg-white rounded-full shadow-md animate-cloud-move-2"></div>

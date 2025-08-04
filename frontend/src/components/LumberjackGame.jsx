@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
+const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
 
-  // منطق لرزش شاخه‌ها
+  // Logic for shaking branches
   useEffect(() => {
     if (!gameActive || loading) {
       setShakeBranch(null);
@@ -11,15 +11,15 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
     }
 
     const interval = setInterval(() => {
-      const randomBranch = Math.floor(Math.random() * 5);
+      const randomBranch = Math.floor(Math.random() * branches.length);
       setShakeBranch(randomBranch);
       setTimeout(() => setShakeBranch(null), 300);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [gameActive, loading]);
+  }, [gameActive, loading, branches.length]);
 
-  // رندر شاخه‌ها با جزئیات جدید
+  // Render branches with new UI
   const renderBranches = () => {
     return branches.map((direction, index) => (
       <div
@@ -30,9 +30,7 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
       >
         {direction === 'left' && (
           <div className="absolute left-1/2 -ml-28 w-40 h-20">
-            {/* شاخه اصلی */}
             <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-r-full shadow-lg"></div>
-            {/* برگ‌ها */}
             <div className="absolute right-0 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
             <div className="absolute right-12 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
           </div>
@@ -40,9 +38,7 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
 
         {direction === 'right' && (
           <div className="absolute right-1/2 -mr-28 w-40 h-20">
-            {/* شاخه اصلی */}
             <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-l-full shadow-lg"></div>
-            {/* برگ‌ها */}
             <div className="absolute left-0 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
             <div className="absolute left-12 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
           </div>
@@ -51,35 +47,80 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
     ));
   };
 
-  // رندر کاراکتر چوب‌بر
+  // Render the lumberjack character
   const renderLumberjack = () => (
     <div
-      className={`absolute bottom-32 transition-all duration-300 ease-in-out ${
+      className={`absolute bottom-32 transition-all duration-300 ease-in-out z-10 ${
         lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-full' : 'right-1/2 transform translate-x-full'
       }`}
     >
-      {/*... بقیه کد کاراکتر چوب‌بر از کد قبلی ...*/}
-      {/* این بخش را می‌توانید از کد قبلی کپی کنید */}
+      {/* --- Start of the Lumberjack's body code --- */}
+      <div className="relative w-24 h-40">
+        {/* Plaid shirt */}
+        <div className="absolute top-0 left-0 w-full h-full bg-red-600 rounded-lg">
+          <div className="absolute inset-0 bg-red-800 opacity-30"></div>
+          {/* Plaid pattern - vertical */}
+          <div className="absolute inset-0 flex">
+            <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
+            <div className="w-1/4 h-full"></div>
+            <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
+            <div className="w-1/4 h-full"></div>
+          </div>
+          {/* Plaid pattern - horizontal */}
+          <div className="absolute inset-0 flex flex-col">
+            <div className="h-1/4 w-full bg-red-800 opacity-20"></div>
+            <div className="h-1/4 w-full"></div>
+            <div className="h-1/4 w-full bg-red-800 opacity-20"></div>
+            <div className="h-1/4 w-full"></div>
+          </div>
+        </div>
+        {/* Belt */}
+        <div className="absolute bottom-16 w-full h-4 bg-gray-900"></div>
+        {/* Legs */}
+        <div className="absolute bottom-0 w-full h-16 flex justify-center">
+          <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
+          <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
+        </div>
+        {/* Arms */}
+        <div className="absolute top-8 left-full transform -translate-x-1/2 w-16 h-6 bg-red-600 rounded-full -rotate-12"></div>
+        <div className="absolute top-8 right-full transform translate-x-1/2 w-16 h-6 bg-red-600 rounded-full rotate-12"></div>
+        {/* Head */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-yellow-200 rounded-full">
+          {/* Beard */}
+          <div className="absolute bottom-0 w-full h-1/2 bg-black rounded-b-full"></div>
+          {/* Hat */}
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-blue-800 rounded-t-full">
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-blue-900 rounded-t-full"></div>
+          </div>
+        </div>
+        {/* Axe */}
+        <div className="absolute -right-4 -top-8 w-24 h-12">
+          <div className="absolute top-1/2 w-full h-4 bg-gray-500 rounded-full shadow-md"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-4 h-12 bg-stone-800 rounded-t-full"></div>
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-red-600 rounded-b-full rotate-45"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-gray-400 rounded-b-full"></div>
+        </div>
+      </div>
+      {/* --- End of the Lumberjack's body code --- */}
     </div>
   );
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-sky-300 font-sans">
-      {/* پس‌زمینه ابر */}
+      {/* Background clouds */}
       <div className="absolute top-1/4 left-1/4 w-32 h-16 bg-white rounded-full shadow-md animate-cloud-move-1"></div>
       <div className="absolute top-1/2 left-3/4 w-40 h-20 bg-white rounded-full shadow-md animate-cloud-move-2"></div>
       <div className="absolute top-1/3 left-1/2 w-24 h-12 bg-white rounded-full shadow-md animate-cloud-move-3"></div>
 
-      {/* نمایش صفحه لودینگ */}
+      {/* Loading state */}
       {loading && (
         <div className="absolute inset-0 bg-sky-800 bg-opacity-80 flex items-center justify-center z-20">
           <div className="text-white text-3xl font-bold animate-pulse">Loading...</div>
         </div>
       )}
 
-      {/* محتوای بازی */}
       <div className="relative w-full h-full flex flex-col items-center justify-end">
-        {/* زمین */}
+        {/* Ground */}
         <div className="relative w-full h-32 bg-green-500 rounded-t-full flex items-start justify-center">
           <div className="w-11/12 h-16 bg-green-700 rounded-t-full transform translate-y-8"></div>
           <div className="absolute left-1/4 top-1/2 w-8 h-4 bg-gray-500 rounded-full"></div>
@@ -87,15 +128,15 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
           <div className="absolute left-1/3 bottom-1/4 w-5 h-2 bg-gray-400 rounded-full"></div>
         </div>
 
-        {/* تنه درخت */}
-        <div className="absolute bottom-32 w-28 h-[70%] bg-amber-800 rounded-t-full shadow-lg flex flex-col-reverse">
+        {/* Tree Trunk */}
+        <div className="absolute bottom-32 w-28 h-[85%] bg-amber-800 rounded-t-full shadow-lg flex flex-col-reverse justify-end">
           <div className="absolute inset-0 bg-texture opacity-20 rounded-t-full"></div>
           <div className="flex-1 flex flex-col-reverse justify-end">
             {renderBranches()}
           </div>
         </div>
 
-        {/* کاراکتر چوب‌بر */}
+        {/* Lumberjack character is now rendered outside the tree's div */}
         {renderLumberjack()}
       </div>
 
@@ -145,4 +186,4 @@ const LumberjackGame = ({ branches, lumberjackPos, loading, gameActive }) => {
   );
 };
 
-export default LumberjackGame;
+export default LumberjackGameUI;

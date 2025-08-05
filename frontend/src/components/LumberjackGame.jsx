@@ -35,8 +35,8 @@ const renderBranches = () => {
           {/* Main branch */}
           <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
           {/* Leaves */}
-          <div className="absolute right-20 -top-4 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute right-32 -top-6 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
+          <div className="absolute right-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+          <div className="absolute right-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
         </div>
       )}
       {direction === 'right' && (
@@ -44,8 +44,8 @@ const renderBranches = () => {
           {/* Main branch */}
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
           {/* Leaves */}
-          <div className="absolute left-20 -top-4 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute left-32 -top-6 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
+          <div className="absolute left-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+          <div className="absolute left-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
         </div>
       )}
     </div>

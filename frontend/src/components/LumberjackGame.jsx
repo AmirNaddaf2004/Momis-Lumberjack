@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import characterImage from './assets/character.png'; 
+const imageSrc = characterImage;
 
 const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
@@ -47,8 +49,6 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   };
 
   const renderLumberjack = () => {
-    const imageSrc = "path/to/your/image.png"; // مسیر عکس آدمکتون رو اینجا وارد کنید
-
     return (
       <div
         className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${

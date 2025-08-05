@@ -47,58 +47,25 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   };
 
   // Render the lumberjack character
-  const renderLumberjack = () => (
+ const renderLumberjack = () => {
+  const imageSrc = "./assets/character.png"; // مسیر عکس آدمکتون رو اینجا وارد کنید
+
+  return (
     <div
       className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
         lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
       }`}
     >
-      <div className="relative w-12 h-20">
-        {/* Plaid shirt */}
-        <div className="absolute top-0 left-0 w-full h-full bg-red-600 rounded-lg">
-          <div className="absolute inset-0 bg-red-800 opacity-30"></div>
-          <div className="absolute inset-0 flex">
-            <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
-            <div className="w-1/4 h-full"></div>
-            <div className="w-1/4 h-full bg-red-800 opacity-20"></div>
-            <div className="w-1/4 h-full"></div>
-          </div>
-          <div className="absolute inset-0 flex flex-col">
-            <div className="h-1/4 w-full bg-red-800 opacity-20"></div>
-            <div className="h-1/4 w-full"></div>
-            <div className="h-1/4 w-full bg-red-800 opacity-20"></div>
-            <div className="h-1/4 w-full"></div>
-          </div>
-        </div>
-        {/* Belt */}
-        <div className="absolute bottom-8 w-full h-2 bg-gray-900"></div>
-        {/* Legs */}
-        <div className="absolute bottom-0 w-full h-8 flex justify-center">
-          <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
-          <div className="w-1/2 h-full bg-blue-700 rounded-b-lg"></div>
-        </div>
-        {/* Arms */}
-        <div className="absolute top-4 left-full transform -translate-x-1/2 w-8 h-3 bg-red-600 rounded-full -rotate-12"></div>
-        <div className="absolute top-4 right-full transform translate-x-1/2 w-8 h-3 bg-red-600 rounded-full rotate-12"></div>
-        {/* Head */}
-        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full">
-          {/* Beard */}
-          <div className="absolute bottom-0 w-full h-1/2 bg-black rounded-b-full"></div>
-          {/* Hat */}
-          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-blue-800 rounded-t-full">
-            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-blue-900 rounded-t-full"></div>
-          </div>
-        </div>
-        {/* Axe */}
-        <div className="absolute -right-2 -top-4 w-12 h-6">
-          <div className="absolute top-1/2 w-full h-2 bg-gray-500 rounded-full shadow-md"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-2 h-6 bg-stone-800 rounded-t-full"></div>
-          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-red-600 rounded-b-full rotate-45"></div>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-gray-400 rounded-b-full"></div>
-        </div>
-      </div>
+      <img
+        src={imageSrc}
+        alt="Lumberjack Character"
+        className={`w-12 h-20 transition-transform duration-300 ${
+          lumberjackPos === 'right' ? 'transform scale-x-[-1]' : ''
+        }`}
+      />
     </div>
   );
+};
 
   return (
     <div className="relative w-full h-[66.6667vh] overflow-hidden bg-sky-300 font-sans">
@@ -121,13 +88,6 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
           </div>
         )}
       </div>
-
-      {/* Loading state */}
-      {loading && (
-        <div className="absolute inset-0 bg-sky-800 bg-opacity-80 flex items-center justify-center z-20">
-          <div className="text-white text-3xl font-bold animate-pulse">Loading...</div>
-        </div>
-      )}
 
       <div className="relative w-full h-full flex flex-col items-center justify-end">
         {/* Ground */}

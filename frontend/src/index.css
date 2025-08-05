@@ -15,10 +15,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.wooden-button {
-  background: radial-gradient(circle, #ffe0b2 0%, #ffcc80 20%, #ffb74d 40%, #ffa726 60%, #ff9800 80%, #fb8c00 100%);
-  border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  /* You can add more styles for hover/active effects */
-}

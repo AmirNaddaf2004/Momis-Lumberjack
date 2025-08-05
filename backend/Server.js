@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 
 const { User, Score, Reward, sequelize } = require("./DataBase/models");
 const MaxTime = 15;
-const rewardTime = 2;
+const rewardTime = 1;
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

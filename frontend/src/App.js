@@ -13,6 +13,7 @@ import GameLobby from "./components/GameLobby";
 import GamePage from "./components/LumberjackGame"; 
 
 const ROUND_TIME = 15;
+const START_TIME = 7.5;
 const API_BASE = "/api";
 
 function App() {
@@ -266,7 +267,7 @@ function App() {
 
                 setBranches(data.branches);
                 setPosition(data.lumberjackPosition);
-                startLocalTimer(data.time_left ?? ROUND_TIME);
+                startLocalTimer(data.time_left ?? START_TIME);
                 setScore(data.score ?? 0);
                 setView("game"); // Set the view to 'game' to start playing
             } catch (err) {

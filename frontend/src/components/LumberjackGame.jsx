@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import characterImage from './assets/character.png'; 
+import characterImage from './../assets/character.png'; 
 const imageSrc = characterImage;
 
 const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData }) => {

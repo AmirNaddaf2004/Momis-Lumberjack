@@ -46,26 +46,26 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
     ));
   };
 
-  // Render the lumberjack character
- const renderLumberjack = () => {
-  const imageSrc = "./assets/character.png"; // مسیر عکس آدمکتون رو اینجا وارد کنید
+  const renderLumberjack = () => {
+    const imageSrc = "path/to/your/image.png"; // مسیر عکس آدمکتون رو اینجا وارد کنید
 
-  return (
-    <div
-      className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
-        lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
-      }`}
-    >
-      <img
-        src={imageSrc}
-        alt="Lumberjack Character"
-        className={`w-12 h-20 transition-transform duration-300 ${
-          lumberjackPos === 'right' ? 'transform scale-x-[-1]' : ''
+    return (
+      <div
+        className={`absolute bottom-28 z-10 transition-all duration-300 ease-in-out ${
+          lumberjackPos === 'left' ? 'left-1/2 transform -translate-x-[200%]' : 'right-1/2 transform translate-x-[200%]'
         }`}
-      />
-    </div>
-  );
-};
+      >
+        <img
+          src={imageSrc}
+          alt="Lumberjack Character"
+          loading="eager" // اینجا اضافه شد
+          className={`w-12 h-20 transition-transform duration-300 ${
+            lumberjackPos === 'right' ? 'transform scale-x-[-1]' : ''
+          }`}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="relative w-full h-[66.6667vh] overflow-hidden bg-sky-300 font-sans">

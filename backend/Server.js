@@ -124,7 +124,7 @@ class LumberjackGame {
                 return;
             }
 
-            player.time_left -= 1 + player.level * 0.005;
+            player.time_left -= 1 + player.score * 0.005;
             player.last_activity = new Date();
 
             if (player.time_left < 0) {
@@ -173,7 +173,7 @@ class LumberjackGame {
 
             const player = this.players[playerId];
             player.game_active = true;
-            player.time_left = this.total_time;
+            player.time_left = this.total_time / 2;
             player.score = 0;
             player.top_score = top_score;
             player.last_activity = new Date();

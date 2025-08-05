@@ -28,6 +28,7 @@ function App() {
     const [leaderboardKey, setLeaderboardKey] = useState(Date.now());
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authLoading, setAuthLoading] = useState(true);
+
     const [token, setToken] = useState(
         () => localStorage.getItem("jwtToken") || null
     );
@@ -155,7 +156,7 @@ function App() {
                         handleTimeout();
                         return 0;
                     }
-                    return prev - 1;
+                    return prev - 1 - score * 0.005;
                 });
             }, 1000);
         },
@@ -264,7 +265,6 @@ function App() {
                 if (!data || data.status !== "success") {
                     throw new Error(data?.message || "Invalid server response");
                 }
-
                 setBranches(data.branches);
                 setPosition(data.lumberjackPosition);
                 startLocalTimer(data.time_left ?? START_TIME);

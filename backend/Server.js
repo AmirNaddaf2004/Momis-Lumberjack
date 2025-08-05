@@ -124,7 +124,7 @@ class LumberjackGame {
                 return;
             }
 
-            player.time_left -= 1;
+            player.time_left -= 1 + player.level * 0.005;
             player.last_activity = new Date();
 
             if (player.time_left < 0) {

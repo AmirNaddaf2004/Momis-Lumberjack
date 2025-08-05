@@ -21,7 +21,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
     return () => clearInterval(interval);
   }, [gameActive, loading, branches.length]);
 
-  // Render branches with new UI
+// Render branches with new UI
 const renderBranches = () => {
   return branches.map((direction, index) => (
     <div
@@ -33,19 +33,19 @@ const renderBranches = () => {
       {direction === 'left' && (
         <div className="absolute left-1/2 -ml-28 w-40 h-20">
           {/* Main branch */}
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-r-full shadow-lg"></div>
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
           {/* Leaves */}
-          <div className="absolute right-24 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute right-30 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
+          <div className="absolute right-20 -top-4 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+          <div className="absolute right-32 -top-6 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
         </div>
       )}
       {direction === 'right' && (
         <div className="absolute right-1/2 -mr-28 w-40 h-20">
           {/* Main branch */}
-          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-8 bg-amber-800 rounded-l-full shadow-lg"></div>
+          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
           {/* Leaves */}
-          <div className="absolute left-24 -top-4 w-24 h-12 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute left-30 -top-6 w-16 h-8 bg-lime-500 rounded-full shadow-md"></div>
+          <div className="absolute left-20 -top-4 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+          <div className="absolute left-32 -top-6 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
         </div>
       )}
     </div>

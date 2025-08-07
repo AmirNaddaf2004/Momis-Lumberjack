@@ -79,7 +79,7 @@ const renderFallingPart = () => {
     // Corrected logic:
     // If the lumberjack is on the 'left', the falling piece should be on the 'right'.
     // If the lumberjack is on the 'right', the falling piece should be on the 'left'.
-    const fallingPosition = lumberjackPos === 'left' ? 'right-1/2 translate-x-[200%]' : 'left-1/2 -translate-x-[200%]';
+    const fallingPosition = lumberjackPos === 'left' ? 'right-1/2 transform translate-x-[200%]' : 'left-1/2 transform -translate-x-[200%]';
     
     // Rotation styles are now based on the falling position, not the lumberjack position.
     // If the falling part is on the right, it should rotate positively.

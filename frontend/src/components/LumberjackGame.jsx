@@ -78,7 +78,7 @@ const renderFallingPart = () => {
 
     // اگر هیزم‌شکن در سمت چپ باشه، قطعه در سمت راست ظاهر میشه
     // اگر هیزم‌شکن در سمت راست باشه، قطعه در سمت چپ ظاهر میشه
-    const fallingPosition = lumberjackPos === 'right' ? 'right-1/2 translate-x-[100%]' : 'left-1/2 -translate-x-[100%]';
+    const fallingPosition = lumberjackPos === 'right' ? 'right-1/2 translate-x-[200%]' : 'left-1/2 -translate-x-[200%]';
     
     // جهت چرخش رو هم بر اساس موقعیت هیزم‌شکن تنظیم کنید
     const trunkRotation = lumberjackPos === 'left' ? 'rotate(45deg)' : 'rotate(-45deg)';

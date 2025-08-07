@@ -314,7 +314,7 @@ class LumberjackGame {
                 };
             }
             var falling = 1;
-            if (branches[1] !== 'none')
+            if (player.branches[1] !== 'none')
                 falling = 2;
 
             // افزایش امتیاز و تولید شاخه جدید

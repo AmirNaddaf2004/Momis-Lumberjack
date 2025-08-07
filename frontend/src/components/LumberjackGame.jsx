@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import characterImage from './../assets/character.png'; 
-const imageSrc = characterImage;
-const [showFallingPart, setShowFallingPart] = useState(false);
+
 
 
 
@@ -9,6 +8,8 @@ const [showFallingPart, setShowFallingPart] = useState(false);
 
 const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData, falling }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
+  const imageSrc = characterImage;
+  const [showFallingPart, setShowFallingPart] = useState(false);
 
   useEffect(() => {
       if (falling > 0) {

@@ -71,14 +71,19 @@ const renderBranches = () => {
     ));
 };
 
- const renderFallingPart = () => {
+const renderFallingPart = () => {
     if (!showFallingPart || falling === 0) {
         return null;
     }
 
+    // Corrected logic:
+    // If the lumberjack is on the 'left', the falling piece should be on the 'right'.
+    // If the lumberjack is on the 'right', the falling piece should be on the 'left'.
     const fallingPosition = lumberjackPos === 'left' ? 'right-1/2 translate-x-[200%]' : 'left-1/2 -translate-x-[200%]';
     
-    // استایل‌های چرخش با توجه به موقعیت هیزم‌شکن
+    // Rotation styles are now based on the falling position, not the lumberjack position.
+    // If the falling part is on the right, it should rotate positively.
+    // If the falling part is on the left, it should rotate negatively.
     const trunkRotation = lumberjackPos === 'left' ? 'rotate(45deg)' : 'rotate(-45deg)';
     const branchRotation = lumberjackPos === 'left' ? 'rotate(45deg)' : 'rotate(-45deg)';
     

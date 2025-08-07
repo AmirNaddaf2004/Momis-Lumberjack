@@ -170,6 +170,9 @@ const renderBranches = () => {
 
         {/* Lumberjack character is now rendered with smaller size and correct position */}
         {renderLumberjack()}
+
+        {/*render falling parts*/}
+        {renderFallingPart()}
       </div>
 
       <style jsx>{`

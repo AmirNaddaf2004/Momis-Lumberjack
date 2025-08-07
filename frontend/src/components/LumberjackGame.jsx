@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import characterImage from './../assets/character.png'; 
 const imageSrc = characterImage;
+const [showFallingPart, setShowFallingPart] = useState(false);
 
-const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData }) => {
+
+useEffect(() => {
+    if (falling > 0) {
+        setShowFallingPart(true);
+        const timer = setTimeout(() => {
+            setShowFallingPart(false);
+        }, 500); // نیم ثانیه
+
+        // پاکسازی تایمر در صورت تغییر حالت قبل از اتمام زمان
+        return () => clearTimeout(timer);
+    }
+}, [falling]);
+
+
+const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData, falling }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
 
   // Logic for shaking branches
@@ -50,6 +65,44 @@ const renderBranches = () => {
       )}
     </div>
   ));
+};
+
+  const renderFallingPart = () => {
+    if (!showFallingPart || falling === 0) {
+        return null;
+    }
+
+    const fallingPosition = lumberjackPos === 'left' ? 'right-1/2 translate-x-[200%]' : 'left-1/2 -translate-x-[200%]';
+    
+    // استایل‌های چرخش
+    const fallingTrunkStyle = {
+        transform: 'rotate(45deg)', 
+    };
+
+    const fallingBranchStyle = {
+        transform: 'rotate(-30deg)', 
+    };
+    
+    if (falling === 1) {
+        return (
+            <div 
+                className={`absolute bottom-28 z-10 w-20 h-20 bg-amber-800 shadow-lg ${fallingPosition}`}
+                style={fallingTrunkStyle}
+            ></div>
+        );
+    } else if (falling === 2) {
+        return (
+            <div 
+                className={`absolute bottom-28 z-10 w-40 h-20 ${fallingPosition}`}
+                style={fallingBranchStyle}
+            >
+                {/* Main branch */}
+                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
+                {/* Leaves */}
+                <div className="absolute left-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+            </div>
+        );
+    }
 };
 
   const renderLumberjack = () => {
@@ -103,7 +156,7 @@ const renderBranches = () => {
         </div>
 
         {/* Tree Trunk */}
-        <div className="absolute bottom-32 w-28 h-[85%] bg-amber-800 rounded-t-full shadow-lg flex flex-col-reverse justify-end">
+        <div className="absolute bottom-32 w-20 h-[85%] bg-amber-800 rounded-t-full shadow-lg flex flex-col-reverse justify-end">
           <div className="absolute inset-0 bg-texture opacity-20 rounded-t-full"></div>
           <div className="flex-1 flex flex-col-reverse justify-end">
             {renderBranches()}

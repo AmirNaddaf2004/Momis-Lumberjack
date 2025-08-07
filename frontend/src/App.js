@@ -24,6 +24,7 @@ function App() {
     const [view, setView] = useState("auth");
     const [finalScore, setFinalScore] = useState(null);
     const [score, setScore] = useState(0);
+    const [falling, setFalling] = useState(0);
     const [error, setError] = useState(null);
     const [leaderboardKey, setLeaderboardKey] = useState(Date.now());
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -194,6 +195,7 @@ function App() {
                 if (data.status === "continue") {
                     setBranches(data.branches);
                     setPosition(data.lumberjackPosition);
+                    setFalling(data.falling);
                     setScore(data.score);
                     startLocalTimer(data.time_left);
                 } else {
@@ -267,6 +269,7 @@ function App() {
                 }
                 setBranches(data.branches);
                 setPosition(data.lumberjackPosition);
+                setFalling(data.falling);
                 startLocalTimer(data.time_left ?? START_TIME);
                 setScore(data.score ?? 0);
                 setView("game"); // Set the view to 'game' to start playing
@@ -387,6 +390,7 @@ function App() {
                     gameActive={gameActive}
                     score={score} // اضافه کردن پروپ score
                     userData={userData} // اضافه کردن پروپ userData
+                    falling={falling}
                 />
                 <TimerBar total={ROUND_TIME} left={timeLeft} />
                 <AnswerButtons

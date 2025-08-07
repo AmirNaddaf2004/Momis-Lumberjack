@@ -200,7 +200,8 @@ class LumberjackGame {
                 user: user.toJSON(),
                 // داده‌های جدید برای بازی
                 lumberjackPosition: player.lumberjackPosition,
-                branches: player.branches
+                branches: player.branches,
+                falling: 0
             };
         } catch (e) {
             logger.error(`Start game error: ${e.message}`, { stack: e.stack });
@@ -312,6 +313,9 @@ class LumberjackGame {
                     reason: "hit_branch"
                 };
             }
+            var falling = 1;
+            if (branches[1] !== 'none')
+                falling = 2;
 
             // افزایش امتیاز و تولید شاخه جدید
             player.score += 1;
@@ -334,7 +338,8 @@ class LumberjackGame {
                 game_active: true,
                 // داده‌های جدید برای بازی
                 lumberjackPosition: player.lumberjackPosition,
-                branches: player.branches
+                branches: player.branches,
+                falling: falling
             };
         } catch (e) {
             logger.error(`Move lumberjack error: ${e.message}`);

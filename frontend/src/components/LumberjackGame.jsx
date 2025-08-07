@@ -41,7 +41,6 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   }, [gameActive, loading, branches.length]);
 
 // Render branches with new UI
-// Render branches with new UI
 const renderBranches = () => {
     return branches.map((direction, index) => (
         <div
@@ -72,39 +71,34 @@ const renderBranches = () => {
     ));
 };
 
-  const renderFallingPart = () => {
+ const renderFallingPart = () => {
     if (!showFallingPart || falling === 0) {
         return null;
     }
 
     const fallingPosition = lumberjackPos === 'left' ? 'right-1/2 translate-x-[200%]' : 'left-1/2 -translate-x-[200%]';
     
-    // استایل‌های چرخش
-    const fallingTrunkStyle = {
-        transform: 'rotate(45deg)', 
-    };
-
-    const fallingBranchStyle = {
-        transform: 'rotate(-30deg)', 
-    };
+    // استایل‌های چرخش با توجه به موقعیت هیزم‌شکن
+    const trunkRotation = lumberjackPos === 'left' ? 'rotate(45deg)' : 'rotate(-45deg)';
+    const branchRotation = lumberjackPos === 'left' ? 'rotate(45deg)' : 'rotate(-45deg)';
     
     if (falling === 1) {
         return (
             <div 
-                className={`absolute bottom-28 z-10 w-20 h-20 bg-amber-800 shadow-lg ${fallingPosition}`}
-                style={fallingTrunkStyle}
+                className={`absolute bottom-28 z-10 w-16 h-16 bg-amber-700 shadow-lg ${fallingPosition}`}
+                style={{ transform: trunkRotation }}
             ></div>
         );
     } else if (falling === 2) {
         return (
             <div 
-                className={`absolute bottom-28 z-10 w-40 h-20 ${fallingPosition}`}
-                style={fallingBranchStyle}
+                className={`absolute bottom-28 z-10 w-32 h-16 ${fallingPosition}`}
+                style={{ transform: branchRotation }}
             >
                 {/* Main branch */}
-                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
+                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-4 bg-amber-700 rounded-full shadow-lg"></div>
                 {/* Leaves */}
-                <div className="absolute left-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+                <div className="absolute left-20 -top-2 w-16 h-8 bg-lime-500 rounded-full shadow-lg"></div>
             </div>
         );
     }

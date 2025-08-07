@@ -14,6 +14,7 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   useEffect(() => {
       if (falling > 0) {
           setShowFallingPart(true);
+          console.log("Falling");
           const timer = setTimeout(() => {
               setShowFallingPart(false);
           }, 500); // نیم ثانیه
@@ -40,34 +41,35 @@ const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score,
   }, [gameActive, loading, branches.length]);
 
 // Render branches with new UI
+// Render branches with new UI
 const renderBranches = () => {
-  return branches.map((direction, index) => (
-    <div
-      key={index}
-      className={`relative flex-1 flex items-center justify-center ${
-        shakeBranch === index ? 'animate-shake' : ''
-      }`}
-    >
-      {direction === 'left' && (
-        <div className="absolute left-1/2 -ml-28 w-40 h-20">
-          {/* Main branch */}
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
-          {/* Leaves */}
-          <div className="absolute right-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute right-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
+    return branches.map((direction, index) => (
+        <div
+            key={index}
+            className={`relative flex-1 flex items-center justify-center ${
+                shakeBranch === index ? 'animate-shake' : ''
+            }`}
+        >
+            {direction === 'left' && (
+                <div className="absolute left-1/2 -ml-28 w-40 h-20">
+                    {/* Main branch */}
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4/5 h-6 bg-amber-800 rounded-full shadow-lg"></div>
+                    {/* Leaves */}
+                    <div className="absolute right-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+                    <div className="absolute right-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
+                </div>
+            )}
+            {direction === 'right' && (
+                <div className="absolute right-1/2 -mr-28 w-40 h-20">
+                    {/* Main branch */}
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4/5 h-6 bg-amber-800 rounded-full shadow-lg"></div>
+                    {/* Leaves */}
+                    <div className="absolute left-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
+                    <div className="absolute left-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
+                </div>
+            )}
         </div>
-      )}
-      {direction === 'right' && (
-        <div className="absolute right-1/2 -mr-28 w-40 h-20">
-          {/* Main branch */}
-          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-6 bg-amber-800 rounded-full shadow-lg"></div>
-          {/* Leaves */}
-          <div className="absolute left-24 -top-2 w-20 h-10 bg-lime-600 rounded-full shadow-lg"></div>
-          <div className="absolute left-36 -top-4 w-12 h-6 bg-lime-500 rounded-full shadow-md"></div>
-        </div>
-      )}
-    </div>
-  ));
+    ));
 };
 
   const renderFallingPart = () => {

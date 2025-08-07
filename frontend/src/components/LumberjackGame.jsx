@@ -4,21 +4,23 @@ const imageSrc = characterImage;
 const [showFallingPart, setShowFallingPart] = useState(false);
 
 
-useEffect(() => {
-    if (falling > 0) {
-        setShowFallingPart(true);
-        const timer = setTimeout(() => {
-            setShowFallingPart(false);
-        }, 500); // نیم ثانیه
 
-        // پاکسازی تایمر در صورت تغییر حالت قبل از اتمام زمان
-        return () => clearTimeout(timer);
-    }
-}, [falling]);
 
 
 const LumberjackGameUI = ({ branches, lumberjackPos, loading, gameActive, score, userData, falling }) => {
   const [shakeBranch, setShakeBranch] = useState(null);
+
+  useEffect(() => {
+      if (falling > 0) {
+          setShowFallingPart(true);
+          const timer = setTimeout(() => {
+              setShowFallingPart(false);
+          }, 500); // نیم ثانیه
+
+          // پاکسازی تایمر در صورت تغییر حالت قبل از اتمام زمان
+          return () => clearTimeout(timer);
+      }
+  }, [falling]);
 
   // Logic for shaking branches
   useEffect(() => {

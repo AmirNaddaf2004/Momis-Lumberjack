@@ -386,8 +386,11 @@ app.post("/api/telegram-auth", async(req, res) => {
 
         const userData = validateTelegramData(initData, process.env.BOT_TOKEN);
 
+        console.log('validation done for user: ' + userData.id);
         // --- بخش جدید: بررسی عضویت اجباری ---
         const isMember = await isUserMember(userData.id);
+        console.log('membership checked for user: ' + userData.id + ' state: ' + isMember);
+
         if (!isMember) {
             logger.info(`Auth blocked for non-member user: ${userData.id}`);
             // کد 403 به معنی "دسترسی ممنوع" است

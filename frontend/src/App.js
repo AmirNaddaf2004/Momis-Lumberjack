@@ -33,6 +33,9 @@ function App() {
     const [authLoading, setAuthLoading] = useState(true);
     const [membershipRequired, setMembershipRequired] = useState(false);
 
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userData");
+
 
     const [token, setToken] = useState(
         () => localStorage.getItem("jwtToken") || null

@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { isUserMember } = require("./bot");
 const express = require("express");
 const cors = require("cors");
 const fetch = require("node-fetch");
@@ -372,7 +373,7 @@ const authenticateToken = (req, res, next) => {
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 // API Routes
-app.post("/api/telegram-auth", (req, res) => {
+app.post("/api/telegram-auth", async(req, res) => {
     try {
         const { initData } = req.body;
         if (!initData) {
@@ -385,6 +386,20 @@ app.post("/api/telegram-auth", (req, res) => {
 
         const userData = validateTelegramData(initData, process.env.BOT_TOKEN);
 
+        // --- بخش جدید: بررسی عضویت اجباری ---
+        const isMember = await isUserMember(userData.id);
+        if (!isMember) {
+            logger.info(`Auth blocked for non-member user: ${userData.id}`);
+            // کد 403 به معنی "دسترسی ممنوع" است
+            return res.status(403).json({
+                valid: false,
+                message:
+                    "To play the game, you must join our channel and group first.",
+                membership_required: true, // یک فلگ برای فرانت‌اند تا پیام مناسب را نمایش دهد
+            });
+        }
+        // --- پایان بخش بررسی عضویت ---
+
         const token = jwt.sign(
             {
                 userId: userData.id,
@@ -394,7 +409,7 @@ app.post("/api/telegram-auth", (req, res) => {
                 photo_url: userData.photo_url,
             },
             process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+            { expiresIn: "1d" } // انقضا توکن
         );
 
         logger.info(

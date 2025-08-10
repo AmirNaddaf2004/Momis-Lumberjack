@@ -356,7 +356,7 @@ function App() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    Math Battle
+                    LumberJack
                 </motion.h1>
 
                 {/* اگر خطای عضویت وجود داشت، پیام و دکمه‌های عضویت را نمایش بده */}

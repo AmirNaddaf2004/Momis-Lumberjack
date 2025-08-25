@@ -24,6 +24,7 @@ function App() {
     const [lumberjackPos, setPosition] = useState(null);
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
     const [loading, setLoading] = useState(false);
+    const [invitedNum, setInvitedNum] = useState(0);
     const [view, setView] = useState("auth");
     const [finalScore, setFinalScore] = useState(null);
     const [score, setScore] = useState(0);
@@ -106,6 +107,7 @@ function App() {
                 throw new Error(data.message || "Authentication failed");
             }
 
+            setInvitedNum(data.invitedNum);
             setToken(data.token);
             setUserData(data.user);
             localStorage.setItem("jwtToken", data.token);
@@ -471,9 +473,10 @@ function App() {
                 userData={userData}
                 onLogout={handleLogout}
                 onImageError={handleImageError}
+                invitedNum={invitedNum}
             />
         );
-    }, [view, startGame, userData, handleLogout, handleImageError]);
+    }, [view, startGame, userData, handleLogout, handleImageError, invitedNum]);
     // محتوای بازی
     const gameContent = useMemo(() => {
         if (view !== "game") return null;

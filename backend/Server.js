@@ -419,6 +419,7 @@ app.post("/api/telegram-auth", async(req, res) => {
 
         return res.json({
             valid: true,
+            invitedNum: 0,
             user: {
                 id: userData.id,
                 first_name: userData.first_name,

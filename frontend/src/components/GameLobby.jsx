@@ -5,7 +5,6 @@ import DefaultAvatar from "../assets/default-avatar.png";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 
 // Assuming you have a central api service to handle authenticated requests
-// If not, you can use axios or fetch directly.
 const api = {
   get: (url) =>
     fetch(url, {
@@ -15,7 +14,7 @@ const api = {
     }).then((res) => res.json()),
 };
 
-const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
+const GameLobby = ({ onGameStart, userData, onLogout, onImageError, invitedNum }) => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,10 +44,9 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
   const handleCopyLink = async () => {
     const inviteLink = `https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.id}`;
     try {
-      // Create a temporary textarea to hold the text
       const textarea = document.createElement('textarea');
       textarea.value = inviteLink;
-      textarea.style.position = 'fixed'; // Prevents scrolling to the bottom of the page
+      textarea.style.position = 'fixed';
       textarea.style.opacity = '0';
       document.body.appendChild(textarea);
       textarea.select();
@@ -61,8 +59,6 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
       console.error('Failed to copy text: ', err);
     }
   };
-
-  // The handleShareLink function has been removed.
 
   if (isLoading) {
     return (
@@ -100,12 +96,18 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
         </div>
       )}
 
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors mb-6 flex items-center justify-center space-x-2"
-      >
-        <span>Invite Friends</span>
-      </button>
+      {/* بخش جدید: نمایش تعداد دوستان دعوت‌شده و دکمه Invite Friends */}
+      <div className="bg-gray-700 bg-opacity-50 rounded-lg p-4 my-3 transition-transform transform hover:scale-105 text-center">
+        <h2 className="text-lg font-bold text-white mb-2">
+          Total Invited Friends: {invitedNum}
+        </h2>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors"
+        >
+          Invite Friends
+        </button>
+      </div>
 
       <h1 className="text-3xl font-bold mb-6 text-center text-yellow-400">
         Game Mode
@@ -154,14 +156,12 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
         </div>
       ))}
 
-      {/* Referral Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-gray-800 bg-opacity-90 rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-2xl font-bold text-white mb-4 text-center">
               Invite a Friend
             </h2>
-            {/* The instructions have been updated below */}
             <h3 className="text-gray-300 font-semibold mb-2">How it works:</h3>
             <ol className="list-decimal list-inside text-gray-400 mb-4 space-y-2">
               <li>Copy your personal invite link below.</li>
@@ -183,7 +183,6 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
                 <ClipboardIcon className="h-5 w-5" />
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
-              {/* The "Share" button has been removed */}
             </div>
             <button
               onClick={() => setIsModalOpen(false)}

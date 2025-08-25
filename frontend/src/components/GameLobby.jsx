@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import DefaultAvatar from "../assets/default-avatar.png";
-// --- CHANGE THIS LINE ---
-import { ClipboardCopyIcon, ShareIcon } from "@heroicons/react/24/outline"; // Correct import for Heroicons v2 outline icons
+// --- CORRECTED THIS LINE ---
+import { ClipboardIcon, ShareIcon } from "@heroicons/react/24/outline"; // Changed ClipboardCopyIcon to ClipboardIcon
 // -----------------------
 
 // Assuming you have a central api service to handle authenticated requests
@@ -204,7 +204,7 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
                     : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
               >
-                <ClipboardCopyIcon className="h-5 w-5" />
+                <ClipboardIcon className="h-5 w-5" /> {/* Changed here */}
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
               <button

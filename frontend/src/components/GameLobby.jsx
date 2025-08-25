@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import DefaultAvatar from "../assets/default-avatar.png";
-// --- CORRECTED THIS LINE ---
-import { ClipboardIcon, ShareIcon } from "@heroicons/react/24/outline"; // Changed ClipboardCopyIcon to ClipboardIcon
-// -----------------------
+import { ClipboardIcon } from "@heroicons/react/24/outline";
 
 // Assuming you have a central api service to handle authenticated requests
 // If not, you can use axios or fetch directly.
@@ -45,8 +43,6 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
   };
 
   const handleCopyLink = async () => {
-    // Ensure userData.bot_username and userData.telegramId are available
-    // You might need to fetch bot_username from your backend if not already in userData
     const inviteLink = `https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.id}`;
     try {
       // Create a temporary textarea to hold the text
@@ -63,33 +59,10 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
-      // Fallback for older browsers or if execCommand also fails
-      // Consider a custom toast/modal instead of alert for better UX
-      // (as per previous instructions, avoid alert() where possible)
-      // For now, keeping it minimal:
-      // alert('Could not copy link automatically. Please copy it manually: ' + inviteLink);
     }
   };
 
-  const handleShareLink = async () => {
-    const inviteLink = `https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.userId}`;
-    const shareText = `Hey! Join me and play this awesome game on Telegram and earn rewards. Use my personal link: ${inviteLink}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Invite a Friend',
-          text: shareText,
-          url: inviteLink,
-        });
-      } catch (err) {
-        console.error('Failed to share:', err);
-      }
-    } else {
-      // Fallback for browsers that don't support the Web Share API
-      // (using alert here as a temporary fallback, replace with custom modal)
-      // alert('Web Share API is not supported in your browser. You can copy the link instead.');
-    }
-  };
+  // The handleShareLink function has been removed.
 
   if (isLoading) {
     return (
@@ -132,7 +105,6 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
         className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors mb-6 flex items-center justify-center space-x-2"
       >
         <span>Invite Friends</span>
-        <ShareIcon className="h-5 w-5" />
       </button>
 
       <h1 className="text-3xl font-bold mb-6 text-center text-yellow-400">
@@ -189,31 +161,29 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
             <h2 className="text-2xl font-bold text-white mb-4 text-center">
               Invite a Friend
             </h2>
-            <p className="text-gray-300 text-center mb-4">
-              Share your personal invite link to earn rewards when a friend joins!
-            </p>
+            {/* The instructions have been updated below */}
+            <h3 className="text-gray-300 font-semibold mb-2">How it works:</h3>
+            <ol className="list-decimal list-inside text-gray-400 mb-4 space-y-2">
+              <li>Copy your personal invite link below.</li>
+              <li>Send it to your friends.</li>
+              <li>When they join and play, you will get some rewards!</li>
+            </ol>
             <div className="bg-gray-700 rounded-lg p-3 break-all mb-4 text-sm text-gray-300">
               {`https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.id}`}
             </div>
             <div className="flex space-x-4">
               <button
                 onClick={handleCopyLink}
-                className={`flex-grow flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-bold transition-colors ${
+                className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-bold transition-colors ${
                   copied
                     ? "bg-green-500 text-white"
                     : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
               >
-                <ClipboardIcon className="h-5 w-5" /> {/* Changed here */}
+                <ClipboardIcon className="h-5 w-5" />
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
-              <button
-                onClick={handleShareLink}
-                className="flex-grow flex items-center justify-center space-x-2 py-2 px-4 rounded-lg bg-green-500 hover:bg-green-600 text-white font-bold transition-colors"
-              >
-                <ShareIcon className="h-5 w-5" />
-                <span>Share</span>
-              </button>
+              {/* The "Share" button has been removed */}
             </div>
             <button
               onClick={() => setIsModalOpen(false)}

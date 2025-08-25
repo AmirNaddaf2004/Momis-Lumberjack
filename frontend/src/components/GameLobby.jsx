@@ -47,7 +47,7 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
   const handleCopyLink = async () => {
     // Ensure userData.bot_username and userData.telegramId are available
     // You might need to fetch bot_username from your backend if not already in userData
-    const inviteLink = `https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.id}`;
+    const inviteLink = `https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.id}`;
     try {
       // Create a temporary textarea to hold the text
       const textarea = document.createElement('textarea');

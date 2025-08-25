@@ -1,8 +1,10 @@
 // frontend/src/components/GameLobby.jsx
 
 import React, { useState, useEffect } from "react";
-import DefaultAvatar from "../assets/default-avatar.png"; // Add this line
-import { ClipboardCopyIcon, ShareIcon } from "@heroicons/react/outline"; // Import icons
+import DefaultAvatar from "../assets/default-avatar.png";
+// --- CHANGE THIS LINE ---
+import { ClipboardCopyIcon, ShareIcon } from "@heroicons/react/24/outline"; // Correct import for Heroicons v2 outline icons
+// -----------------------
 
 // Assuming you have a central api service to handle authenticated requests
 // If not, you can use axios or fetch directly.
@@ -43,18 +45,34 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
   };
 
   const handleCopyLink = async () => {
-    const inviteLink = `https://t.me/${userData.bot_username}?start=invite_${userData.telegramId}`;
+    // Ensure userData.bot_username and userData.telegramId are available
+    // You might need to fetch bot_username from your backend if not already in userData
+    const inviteLink = `https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.telegramId}`;
     try {
-      await navigator.clipboard.writeText(inviteLink);
+      // Create a temporary textarea to hold the text
+      const textarea = document.createElement('textarea');
+      textarea.value = inviteLink;
+      textarea.style.position = 'fixed'; // Prevents scrolling to the bottom of the page
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
+      // Fallback for older browsers or if execCommand also fails
+      // Consider a custom toast/modal instead of alert for better UX
+      // (as per previous instructions, avoid alert() where possible)
+      // For now, keeping it minimal:
+      // alert('Could not copy link automatically. Please copy it manually: ' + inviteLink);
     }
   };
 
   const handleShareLink = async () => {
-    const inviteLink = `https://t.me/${userData.bot_username}?start=invite_${userData.telegramId}`;
+    const inviteLink = `https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.telegramId}`;
     const shareText = `Hey! Join me and play this awesome game on Telegram and earn rewards. Use my personal link: ${inviteLink}`;
     if (navigator.share) {
       try {
@@ -68,7 +86,8 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
       }
     } else {
       // Fallback for browsers that don't support the Web Share API
-      alert('Web Share API is not supported in your browser. You can copy the link instead.');
+      // (using alert here as a temporary fallback, replace with custom modal)
+      // alert('Web Share API is not supported in your browser. You can copy the link instead.');
     }
   };
 
@@ -174,7 +193,7 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
               Share your personal invite link to earn rewards when a friend joins!
             </p>
             <div className="bg-gray-700 rounded-lg p-3 break-all mb-4 text-sm text-gray-300">
-              {`https://t.me/${userData.bot_username}?start=invite_${userData.telegramId}`}
+              {`https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.telegramId}`}
             </div>
             <div className="flex space-x-4">
               <button

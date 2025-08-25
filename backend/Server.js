@@ -442,7 +442,7 @@ app.post("/api/telegram-auth", async(req, res) => {
             `Telegram authentication successful for user: ${userData.id}`
         );
 
-        const invitedNum = getActiveReferredFriendsCount(userData.id)
+        const invitedNum = await getActiveReferredFriendsCount(userData.id);
 
         return res.json({
             valid: true,

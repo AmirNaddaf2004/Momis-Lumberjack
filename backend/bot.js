@@ -126,9 +126,6 @@ function startListening() {
                     lastName: lastName,
                     referrerTelegramId: referrerTelegramId,
                 });
-                // --- بخش جدید: ایجاد رکورد امتیاز برای کاربر جدید ---
-                await Score.create({ userTelegramId: userId, value: 0 });
-                // ---
                 logger.info(`New user registered: ${userId}. Referrer: ${referrerTelegramId || 'None'}`);
 
                 if (referrerTelegramId) {

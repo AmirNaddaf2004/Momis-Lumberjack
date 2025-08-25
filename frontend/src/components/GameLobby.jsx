@@ -47,7 +47,7 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
   const handleCopyLink = async () => {
     // Ensure userData.bot_username and userData.telegramId are available
     // You might need to fetch bot_username from your backend if not already in userData
-    const inviteLink = `https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.telegramId}`;
+    const inviteLink = `https://t.me/${userData.bot_username || 'YOUR_BOT_USERNAME'}?start=invite_${userData.id}`;
     try {
       // Create a temporary textarea to hold the text
       const textarea = document.createElement('textarea');
@@ -193,7 +193,7 @@ const GameLobby = ({ onGameStart, userData, onLogout, onImageError }) => {
               Share your personal invite link to earn rewards when a friend joins!
             </p>
             <div className="bg-gray-700 rounded-lg p-3 break-all mb-4 text-sm text-gray-300">
-              {`https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.userId}`}
+              {`https://t.me/${userData.bot_username || 'Momis_Lumberjack_bot'}?start=invite_${userData.id}`}
             </div>
             <div className="flex space-x-4">
               <button
